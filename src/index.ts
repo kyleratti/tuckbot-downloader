@@ -13,6 +13,7 @@ import Ffmpeg from 'fluent-ffmpeg';
 import util from 'util';
 
 import {SubredditWorker} from './SubredditWorker';
+import { YouTubeWorker } from './YouTubeWorker';
 
 // load config
 let objResult = dotenv.load();
@@ -69,7 +70,7 @@ function run() {
         let objStream = storm.SubmissionStream({
             //subreddit: strSubName,
             results: 1,
-            pollTime: 1000 * 20
+            pollTime: 1000 * 2
         });
 
         objStream.on("submission", function(objPost) {
@@ -83,37 +84,12 @@ function run() {
 
             // TODO: check for more than YouTube
             if(ytdl.validateURL(strURL)) {
-                try {
-                    console.log("Starting DL of %s", strURL);
-                    ytdl(strURL, {filter: (format) => format.container === 'mp4'})
-                        .on('error', (e) => {
-                            if(e.message === 'Fetching stream failed: Error: This video is unavailable.') {
-                                console.log("Can't retrieve %s: video is unavailable", strURL);
-                            } else
-                                console.error("ERROR: Fetching stream failed: %s", e);
-                        })
-                        .pipe(fs.createWriteStream(strTempOutput)).on('finish', () => {
-                            console.log("    * Finished downloading, converting to webm now");
-                            let objConverter = Ffmpeg({
-                                    source: strTempOutput,
-                                    timeout: 60 * 5
-                                }).withVideoCodec('libvpx')
-                                //.withVideoBitrate(1024)
-                                .withAudioCodec('libvorbis')
-                                .addOutputOptions(['-threads 8', '-cpu-used 5', '-deadline realtime'])
-                                .saveToFile(strFinalOutput)
-                                .on('end', function() {
-                                    console.log("    * Finished, file is at %s", strFinalOutput);
-                                    // TODO: upload somewhere else
-                                    reply(objPost, "#Here's a [mirror of this video](https://url.com)");
-                                })
-                                .on('error', function(e) {
-                                    console.error("Unable to finish ffmpeg: %s", e);
-                                });
-                        });
-                } catch(e) {
-                    console.error("[ERROR] Unable to download YouTube video: %s", e);
-                }
+                let objWorker = new YouTubeWorker({
+                    url: strURL,
+                    post: objPost,
+                    tempFolder: strBaseDir
+                });
+                objWorker.start();
             }
         });
     });
