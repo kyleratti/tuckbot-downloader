@@ -25,10 +25,11 @@ The following subreddits rely on **a-mirror** for his holy botness:
 
 ## Current Features
 
-* YouTube linked posts (note that we are limited by region blocks)
+* Mirroring of YouTube linked posts (note that we are limited by region blocks)
 
 ### Planned Features
 
+* `webm` conversion for reduced bandwidth and file sizes
 * reddit video support
 * Gfycat support
 * imgur support
