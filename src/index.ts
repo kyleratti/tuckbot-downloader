@@ -4,11 +4,9 @@ import * as configurator from './Configurator';
 import snoowrap from 'snoowrap';
 import snoostorm from 'snoostorm';
 
-import fs from 'fs';
 import ytdl from 'ytdl-core';
 import path from 'path';
 import crypto from 'crypto';
-import Ffmpeg from 'fluent-ffmpeg';
 
 import util from 'util';
 
@@ -79,8 +77,6 @@ function run() {
             let strURL = objPost.url;
             let strHash = crypto.createHash('md5').update(strURL).digest('hex');
             let strBaseDir = path.resolve('../', config.app.file.local.storageDir);
-            let strTempOutput = path.resolve(strBaseDir, (strHash + '.mp4'));
-            let strFinalOutput = path.resolve(strBaseDir, (strHash + '.webm'));
 
             // TODO: check for more than YouTube
             if(ytdl.validateURL(strURL)) {

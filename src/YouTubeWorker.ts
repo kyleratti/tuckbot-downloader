@@ -2,7 +2,6 @@ import ytdl from 'ytdl-core';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import Ffmpeg from 'fluent-ffmpeg';
 import util from 'util';
 
 const arrRobotWords = [
