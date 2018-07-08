@@ -9,8 +9,8 @@ const arrRobotWords = [
     "Beep boop bop.",
     "Beep. Beeep. Beeeeeeeeeeeeeeeep.",
     "Boop.",
-    "\\*R2D2 noises\\*",
-    "Hi"
+    "*R2D2 noises*",
+    "Hi!"
 ]
 
 interface ConfigOptions {
@@ -44,7 +44,7 @@ export class YouTubeWorker {
         let iRandomIndex = Math.floor(Math.random() * arrRobotWords.length);
         let strRobotSpeak = arrRobotWords[iRandomIndex];
 
-        this.post.reply(util.format("%s\n\n*%s* That's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", strMessage, strRobotSpeak));
+        this.post.reply(util.format("%s\n\n`%s` That's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", strMessage, strRobotSpeak));
     }
 
     /**
