@@ -1,40 +1,48 @@
 {
-  "name": "a-mirror",
-  "version": "1.0.0",
-  "description": "A mirror bot for reddit",
-  "main": "lib/index.js",
-  "types": "dts/index.d.ts",
-  "scripts": {
-    "build": "tsc -p src",
-    "watch": "tsc -p src -w",
-    "prepublishOnly": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/a-banana/a-mirror.git"
-  },
-  "author": "a.banana",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/a-banana/a-mirror/issues"
-  },
-  "homepage": "https://github.com/a-banana/a-mirror#readme",
-  "dependencies": {
-    "dotenv": "^6.0.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "fs": "0.0.1-security",
-    "handbrake-js": "^3.0.6",
-    "path": "^0.12.7",
-    "snoostorm": "0.0.5",
-    "snoowrap": "^1.15.2",
-    "util": "^0.11.0",
-    "ytdl-core": "^0.20.4"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^4.0.3",
-    "@types/fluent-ffmpeg": "^2.1.6",
-    "@types/node": "^10.5.2",
-    "@types/snoowrap": "^1.16.0",
-    "typescript": "^2.9.2"
-  }
+   "name": "a-mirror",
+   "version": "1.0.0",
+   "description": "A mirror bot for reddit",
+   "main": "lib/index.js",
+   "types": "dts/index.d.ts",
+   "scripts": {
+      "build": "tsc -p src",
+      "watch": "tsc -p src -w",
+      "prepublishOnly": "npm run build"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/a-banana/a-mirror.git"
+   },
+   "author": "a.banana",
+   "license": "GPL-3.0",
+   "bugs": {
+      "url": "https://github.com/a-banana/a-mirror/issues"
+   },
+   "homepage": "https://github.com/a-banana/a-mirror#readme",
+   "dependencies": {
+      "dotenv": "^6.0.0",
+      "fs": "0.0.1-security",
+      "microinject": "^0.5.2",
+      "os": "^0.1.1",
+      "path": "^0.12.7",
+      "pug": "^2.0.3",
+      "request": "^2.87.0",
+      "request-promise-native": "^1.0.5",
+      "sequelize": "^4.38.0",
+      "snoostorm": "0.0.5",
+      "snoowrap": "^1.15.2",
+      "sqlite3": "^4.0.1",
+      "util": "^0.11.0",
+      "ytdl-core": "^0.20.4"
+   },
+   "devDependencies": {
+      "@types/dotenv": "^4.0.3",
+      "@types/fluent-ffmpeg": "^2.1.6",
+      "@types/node": "^8.0.29",
+      "@types/request-promise-native": "^1.0.15",
+      "@types/sequelize": "^4.27.23",
+      "@types/snoowrap": "^1.16.0",
+      "ts-node": "3.3.0",
+      "typescript": "^2.9.2"
+   }
 }
