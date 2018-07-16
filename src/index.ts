@@ -1,27 +1,21 @@
-import * as dotenv from 'dotenv';
-import * as configurator from './Configurator';
+import * as configurator from './configurator';
 
 import snoowrap from 'snoowrap';
 import snoostorm from 'snoostorm';
 
 import ytdl from 'ytdl-core';
-import path from 'path';
-import crypto from 'crypto';
-
 import util from 'util';
 
-import {SubredditWorker} from './SubredditWorker';
-import { YouTubeWorker } from './YouTubeWorker';
+import { Video, Status } from './objects/video';
 
 // load config
-let objResult = dotenv.load();
-if(objResult.error)
-    throw objResult.error
-
 const config = configurator.load();
+const appToken = config.app.auth.token;
+const webUrl = config.app.webUrl;
+const cdnUrl = config.app.cdnUrl;
 
 // set up snoowrap
-const wrap = new snoowrap({
+export var wrap = new snoowrap({
     userAgent: config.reddit.userAgent,
     clientId: config.reddit.clientID,
     clientSecret: config.reddit.clientSecret,
@@ -34,58 +28,68 @@ wrap.config({
 });
 
 // set up snoostorm
-const storm = new snoostorm(wrap);
+export var storm = new snoostorm(wrap);
 
-// set up replybot
-const arrRobotWords = [
-    "Beep boop bop.",
-    "Beep. Beeep. Beeeeeeeeeeeeeeeep.",
-    "Boop.",
-    "\\*R2D2 noises\\*",
-    "Hi"
-]
-
-/**
- * Replies to the specified post with the specified message
- * @param objPost The post to respond to
- * @param strMessage The message to respond with
- */
-function reply(objPost, strMessage:string) {
-    let iRandomIndex = Math.floor(Math.random() * arrRobotWords.length);
-    let strRobotSpeak = arrRobotWords[iRandomIndex];
-
-    objPost.reply(util.format("%s\n\n*%s* That's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", strMessage, strRobotSpeak));
-}
-
-function run() {
+function runScanner() {
     // check that subs are set up, then subscribe to submission stream
     if(config.reddit.scanSubsList.length <= 0)
         throw new Error('Subreddit scan list is empty; aborting');
 
-    config.reddit.scanSubsList.forEach(strSubName => {
-        console.log("Starting submission stream for /r/%s", strSubName);
+    config.reddit.scanSubsList.forEach(subName => {
+        console.log("Starting submission stream for /r/%s", subName);
 
-        let objStream = storm.SubmissionStream({
-            //subreddit: strSubName,
+        let stream = storm.SubmissionStream({
+            //subreddit: subName,
             results: 1,
             pollTime: 1000 * 2
         });
 
-        objStream.on("submission", function(objPost) {
-            if(objPost.is_self) return;
+        stream.on('submission', async function(post) {
+            if(post.is_self) return;
 
-            let strURL = objPost.url;
-            let strHash = crypto.createHash('md5').update(strURL).digest('hex');
-            let strBaseDir = path.resolve('../', config.app.file.local.storageDir);
+            let vid = await new Video(post);
+
+            let url = post.url;
 
             // TODO: check for more than YouTube
-            if(ytdl.validateURL(strURL)) {
-                let objWorker = new YouTubeWorker({
-                    url: strURL,
-                    post: objPost,
-                    tempFolder: strBaseDir
-                });
-                objWorker.start();
+            if(ytdl.validateURL(url)) {
+                /*
+                * TODO: get permalink of the post (post.id)
+                * TODO: look for an existing video (db lookup)
+                *   if video exists, create a new post and link it to the video
+                *   else, create the video and the post
+                */
+
+                let postId = post.id; // permalink ID of reddit post
+
+                // TODO: call API, check if video exists/get its status
+                // TODO: if video already exists, ignore and log status
+                // TODO: if video does not exist:
+                    // 1. add it to database
+                    // 2. set status to donwloading
+                    // 3. download
+                    // 4. set status to ready
+
+                console.log(`checking api for ${postId}`);
+
+                vid.exists()
+                    .then(() => {
+                        return console.log(`post ${vid.redditPostId} already exists in database, ignoring...`);
+                    })
+                    .catch(err => {
+                        if(err.statusCode === 404) {
+                            console.log(`received first request to mirror ${vid.redditPostId}, creating video mirror entry`);
+                            vid.create()
+                                .then(data => {
+                                    console.log(`added video ${vid.redditPostId} to database successfully`);
+                                })
+                                .catch(err => {
+                                    console.error(`failed to add video to database: ${err}`);
+                                });
+                        } else {
+                            console.error(`failed to fetch info on ${vid.redditPostId}: ${err}`);
+                        }
+                    });
             }
         });
     });
@@ -93,4 +97,37 @@ function run() {
     // TODO: check if should listen to comments, and if so, subscribe
 }
 
-run();
+/** Poll the database for new videos to download, transcode, and share */
+function pollForVideos() {
+    Video.findNew()
+        .then(videos => {
+            videos.forEach(vid => {
+                console.log(`attempting download for ${vid.redditPostId}`);
+                vid.download()
+                    .then(() => {
+                        console.log(`download finished`);
+                        vid.reply(util.format("#Here's a [mirror of this video](https://a-mirror.clutch22.me/%s)", vid.redditPostId));
+                        vid.update({
+                            status: Status.MirroredLocally
+                        });
+                    })
+                    .catch(err => {
+                        if(err.message === 'Error: This video is unavailable.') {
+                            console.error(`updating with error state`);
+                            this.update({
+                                status: Status.VideoUnavailable
+                            });
+                        }
+                        console.error(`download error: ${err}`);
+                    });
+            });
+        })
+        .catch(err => {
+            console.error(`failed finding new videos: ${err}`);
+        });
+}
+
+runScanner();
+pollForVideos();
+
+setInterval(pollForVideos, 1000 * 5);
