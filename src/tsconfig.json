@@ -3,6 +3,8 @@
       "target": "es6",
       "module": "commonjs",
       "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
       "esModuleInterop": true,
       "stripInternal": true,
       "strict": false,
@@ -10,9 +12,8 @@
       "outDir": "../lib",
       "declaration": true,
       "declarationDir": "../dts",
-      "sourceMap": true
+      "sourceMap": true,
     },
-    "exclude": [
-        
+    "exclude": [  
     ]
   }
