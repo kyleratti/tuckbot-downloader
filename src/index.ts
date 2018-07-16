@@ -24,7 +24,7 @@ export var wrap = new snoowrap({
 });
 
 wrap.config({
-    continueAfterRatelimitError: true
+    continueAfterRatelimitError: false // we will handle our own replies
 });
 
 // set up snoostorm
@@ -39,7 +39,7 @@ function runScanner() {
         console.log("Starting submission stream for /r/%s", subName);
 
         let stream = storm.SubmissionStream({
-            //subreddit: subName,
+            subreddit: subName,
             results: 1,
             pollTime: 1000 * 2
         });
@@ -105,18 +105,12 @@ function pollForVideos() {
                 console.log(`attempting download for ${vid.redditPostId}`);
                 vid.download()
                     .then(() => {
-                        console.log(`download finished`);
-                        vid.reply(util.format("#Here's a [mirror of this video](https://a-mirror.clutch22.me/%s)", vid.redditPostId));
-                        vid.update({
-                            status: Status.MirroredLocally
-                        });
+                        vid.update({ status: Status.LocallyMirrored });
                     })
                     .catch(err => {
                         if(err.message === 'Error: This video is unavailable.') {
                             console.error(`updating with error state`);
-                            this.update({
-                                status: Status.VideoUnavailable
-                            });
+                            vid.update({ status: Status.VideoUnavailable });
                         }
                         console.error(`download error: ${err}`);
                     });
@@ -127,7 +121,33 @@ function pollForVideos() {
         });
 }
 
+function pollForNeededReplies() {
+    // TODO: get all videos that are mirrored but not posted, try replying now
+    Video.findUnpostedMirrored()
+        .then(videos => {
+            videos.forEach(vid => {
+                console.log(`attempting reply for ${vid.redditPostId}`);
+
+                vid.reply(util.format("#Here's a [mirror of this video](https://a-mirror.clutch22.me/%s)", vid.redditPostId))
+                    .then(() => {
+                        console.log(`posted reply`);
+                        vid.update({
+                            status: Status.PostedLocalMirror
+                        });
+                    })
+                    .catch(err => {
+                        console.error(`failed replying to message: ${err}`);
+                    });
+            });
+        })
+        .catch(err => {
+            console.log(`failed finding mirrored videos: ${err}`);
+        });
+}
+
 runScanner();
 pollForVideos();
+pollForNeededReplies();
 
 setInterval(pollForVideos, 1000 * 5);
+setInterval(pollForNeededReplies, 1000 * 30);
