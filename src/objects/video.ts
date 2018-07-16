@@ -24,7 +24,10 @@ export enum Status {
     NewRequest = 0,
     Downloading = 10,
     Transcoding = 20,
-    MirroredLocally = 50,
+
+    LocallyMirrored = 40,
+
+    PostedLocalMirror = 50,
 
     // Errors
     DownloadingFailed = 100,
@@ -36,9 +39,11 @@ export interface UpdateOptions {
     /** The status of the video */
     status?: Status,
     /** The number of views the video has */
-    views?: Number,
+    views?: number,
     /** The date/time of the last view */
-    lastView?: Date
+    lastView?: Date,
+    /** Whether or not the mirror has been posted */
+    posted?: boolean,
 }
 
 export class Video {
@@ -144,10 +149,7 @@ export class Video {
         let i = Math.floor(Math.random() * robotWords.length);
         let robotSpeak = robotWords[i];
 
-        this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", message, robotSpeak))
-            .catch(err => {
-                console.error(`failed replying to message: ${err}`);
-            });
+        return this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", message, robotSpeak));
     }
 
     static findById(redditPostId) {
@@ -168,6 +170,42 @@ export class Video {
         return new Promise<Video[]>((success, fail) => {
             request.get({
                 uri: webUrl + '/api/video/getnew',
+                headers: {
+                    token: config.app.auth.token
+                },
+                json: true
+            })
+                .then(res => {
+                    if(!res.data) return [];
+
+                    let data = res.data;
+                    let i = 0;
+                    let total = data.length;
+
+                    data.forEach(videoObj => {
+                        Video.findById(videoObj.redditPostId)
+                            .then(vid => {
+                                videos.push(vid);
+
+                                i++;
+
+                                if(i >= total)
+                                    success(videos);
+                            });
+                    });
+                })
+                .catch(fail)
+        });
+    }
+    
+    /**
+     * Finds all posts that are mirrored but need the reply comment sent out
+     */
+    static findUnpostedMirrored() {
+        let videos = [];
+        return new Promise<Video[]>((success, fail) => {
+            request.get({
+                uri: webUrl + '/api/video/getmirrored',
                 headers: {
                     token: config.app.auth.token
                 },
