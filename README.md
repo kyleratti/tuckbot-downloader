@@ -21,7 +21,8 @@ Only the below sites/services are supported by **a-mirror**:
 ## Supported Subreddits
 The following subreddits rely on **a-mirror** for his holy botness:
 
-* ...none! :-(
+* [/r/WranglerYJ](https://reddit.com/r/WranglerYJ) (doesn't really count since I'm a mod here)
+* ...no one else! :-(
 
 ## Current Features
 
