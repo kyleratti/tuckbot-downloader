@@ -1,4 +1,11 @@
+import * as dotenv from 'dotenv';
+
+/** Loads the .env file into the environment and returns the current config */
 export function load() {
+    let objResult = dotenv.load();
+    if(objResult.error)
+        throw objResult.error
+    
     return {
         /** App configuration */
         app: {
@@ -11,7 +18,22 @@ export function load() {
                     /** The local directory to store files in */
                     storageDir: String(process.env.LOCAL_STORAGE_DIR),
                 }
-            }
+            },
+
+            auth: {
+                /** The token used to authenticate private API requests */
+                token: String(process.env.AUTH_TOKEN)
+            },
+
+            /** The full URL to the web endpoint */
+            webUrl: String(process.env.WEB_URL),
+            /** The full URL to the CDN endpoint */
+            cdnUrl: String(process.env.CDN_URL)
+        },
+
+        /** Database configuration */
+        database: {
+            location: String(process.env.DATABASE_LOCATION)
         },
 
         /** reddit configuration */
