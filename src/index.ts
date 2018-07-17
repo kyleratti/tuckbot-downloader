@@ -41,7 +41,7 @@ function runScanner() {
         let stream = storm.SubmissionStream({
             subreddit: subName,
             results: 1,
-            pollTime: 1000 * 2
+            pollTime: 1000 * 60
         });
 
         stream.on('submission', async function(post) {
