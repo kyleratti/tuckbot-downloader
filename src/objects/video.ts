@@ -187,6 +187,10 @@ export class Video {
         return this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/a-banana/a-mirror)", message, robotSpeak));
     }
 
+    /**
+     * Finds the video by specified id
+     * @param redditPostId The unique reddit post id
+     */
     static findById(redditPostId) {
         return new Promise((success, fail) => {
             wrap.getSubmission(redditPostId).fetch()
