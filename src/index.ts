@@ -53,22 +53,8 @@ function runScanner() {
 
             // TODO: check for more than YouTube
             if(ytdl.validateURL(url)) {
-                /*
-                * TODO: get permalink of the post (post.id)
-                * TODO: look for an existing video (db lookup)
-                *   if video exists, create a new post and link it to the video
-                *   else, create the video and the post
-                */
 
                 let postId = post.id; // permalink ID of reddit post
-
-                // TODO: call API, check if video exists/get its status
-                // TODO: if video already exists, ignore and log status
-                // TODO: if video does not exist:
-                    // 1. add it to database
-                    // 2. set status to donwloading
-                    // 3. download
-                    // 4. set status to ready
 
                 console.log(`checking api for ${postId}`);
 
@@ -115,7 +101,7 @@ function pollForVideos() {
                     })
                     .catch(err => {
                         if(err.message === 'Error: This video is unavailable.') {
-                            console.error(`updating with error state`);
+                            console.error(`updating with unavailable state`);
                             vid.update({ status: Status.VideoUnavailable });
                         }
                         console.error(`download error: ${err}`);
