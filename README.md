@@ -1,6 +1,8 @@
 # a-mirror
 A mirror bot for reddit. This bot will attempt to mirror linked video posts from supported services and post a link to them.
 
+a-mirror cannot function without its sidekick, [a-mirror-web](https://github.com/kyleratti/a-mirror-web).
+
 ## Retention Policy
 The **a-mirror** bot will retain mirrored videos for up to 30 days. Anything beyond that is not guaranteed. If you're interested in using **a-mirror** on your subreddit but need a longer retention period, please [contact the author](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20retention%20period).
 
