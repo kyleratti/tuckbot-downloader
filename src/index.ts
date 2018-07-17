@@ -53,7 +53,6 @@ function runScanner() {
 
             // TODO: check for more than YouTube
             if(ytdl.validateURL(url)) {
-
                 let postId = post.id; // permalink ID of reddit post
 
                 console.log(`checking api for ${postId}`);
