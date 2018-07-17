@@ -7,8 +7,8 @@ import path from 'path';
 import util from 'util';
 import fs from 'fs';
 
-import { YouTubeWorker } from "../YouTubeWorker";
-import { Submission } from "../../node_modules/@types/snoowrap";
+import { YouTubeWorker } from "../workers/YouTubeWorker";
+import { Submission } from "snoowrap";
 
 const config = configurator.load();
 const apiUrl = config.app.apiUrl;

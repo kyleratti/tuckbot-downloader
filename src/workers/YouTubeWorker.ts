@@ -1,7 +1,7 @@
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 import path from 'path';
-import { Video } from './objects/video';
+import { Video } from '../objects/video';
 
 export interface ConfigOptions {
     /** The Video object this worker is attached to */
