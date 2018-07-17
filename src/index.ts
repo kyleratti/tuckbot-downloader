@@ -66,7 +66,7 @@ function runScanner() {
                             console.log(`received first request to mirror ${vid.redditPostId}, creating video mirror entry`);
                             vid.create()
                                 .then(data => {
-                                    console.log(`added video ${vid.redditPostId} to database successfully`);
+                                    console.log(`added video ${vid.redditPostId} to request database successfully`);
                                 })
                                 .catch(err => {
                                     console.error(`failed to add video to database: ${err}`);
