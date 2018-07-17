@@ -27,8 +27,10 @@ export function load() {
 
             /** The full URL to the web endpoint */
             webUrl: String(process.env.WEB_URL),
-            /** The full URL to the CDN endpoint */
-            cdnUrl: String(process.env.CDN_URL)
+            /** The full URL to the cdn endpoint */
+            cdnUrl: String(process.env.CDN_URL),
+            /** The full URL to the api endpoint */
+            apiUrl: String(process.env.API_URL)
         },
 
         /** Database configuration */
