@@ -105,7 +105,13 @@ function pollForVideos() {
                 console.log(`attempting download for ${vid.redditPostId}`);
                 vid.download()
                     .then(() => {
-                        vid.update({ status: Status.LocallyMirrored });
+                        vid.upload().then(() => {
+                            vid.update({ status: Status.LocallyMirrored });
+                            console.log(`successfully uploaded video ${vid.redditPostId}`);
+                        })
+                        .catch((err) => {
+                            console.error(`failed to upload video: ${err}`);
+                        });
                     })
                     .catch(err => {
                         if(err.message === 'Error: This video is unavailable.') {
@@ -128,7 +134,7 @@ function pollForNeededReplies() {
             videos.forEach(vid => {
                 console.log(`attempting reply for ${vid.redditPostId}`);
 
-                vid.reply(util.format("#Here's a [mirror of this video](https://a-mirror.clutch22.me/%s)", vid.redditPostId))
+                vid.reply(util.format("#Here's a [mirror of this video](https://amirror.link/%s)", vid.redditPostId))
                     .then(() => {
                         console.log(`posted reply`);
                         vid.update({
