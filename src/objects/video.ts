@@ -5,12 +5,13 @@ import { wrap } from "..";
 import ytdl from 'ytdl-core';
 import path from 'path';
 import util from 'util';
+import fs from 'fs';
 
 import { YouTubeWorker } from "../YouTubeWorker";
 import { Submission } from "../../node_modules/@types/snoowrap";
 
 const config = configurator.load();
-const webUrl = config.app.webUrl;
+const apiUrl = config.app.apiUrl;
 
 const robotWords = [
     "Beep boop bop.",
@@ -68,7 +69,7 @@ export class Video {
     exists() {
         return new Promise((success, fail) => {
             request.get({
-                uri: webUrl + `/api/video/getinfo/${this.redditPostId}`,
+                uri: apiUrl + `/video/getinfo/${this.redditPostId}`,
                 headers: {
                     token: config.app.auth.token
                 },
@@ -82,7 +83,7 @@ export class Video {
     create() {
         return new Promise((success, fail) => {
             request.put({
-                uri: webUrl + '/api/video/add',
+                uri: apiUrl + '/video/add',
                 body: {
                     token: config.app.auth.token,
                     redditPostId: this.redditPostId,
@@ -112,7 +113,7 @@ export class Video {
                 updatedData['lastView'] = options.lastView;
 
             request.post({
-                uri: webUrl + '/api/video/update',
+                uri: apiUrl + '/video/update',
                 body: updatedData,
                 json: true
             })
@@ -126,18 +127,39 @@ export class Video {
             this.update({status: Status.Downloading});
 
             this.post.fetch().then((obj) => {
-                console.log(obj.url);
                 if(ytdl.validateURL(obj.url)) {
-                    // TODO: launch youtube downloader
                     let worker = new YouTubeWorker({
                         video: this,
-                        tempFolder: path.resolve('../', config.app.file.local.storageDir)
+                        tempFolder: '/tmp/videos/',
+                        fileName: this.redditPostId + '.mp4'
                     });
                     worker.start()
                         .then(success)
                         .catch(fail);
+                } else {
+                    console.error(`invalid video type for ${obj.url}`);
                 }
             });
+        });
+    }
+
+    upload() {
+        let fileName = this.redditPostId + '.mp4';
+        let filePath = path.resolve('/tmp/videos/', fileName);
+
+        return request.put({
+            uri: apiUrl + '/video/upload',
+            formData: {
+                token: config.app.auth.token,
+                redditPostId: this.redditPostId,
+                video: {
+                    value: fs.createReadStream(filePath),
+                    options: {
+                        filename: fileName,
+                        contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
+                    }
+                }
+            }
         });
     }
 
@@ -169,7 +191,7 @@ export class Video {
         let videos = [];
         return new Promise<Video[]>((success, fail) => {
             request.get({
-                uri: webUrl + '/api/video/getnew',
+                uri: apiUrl + '/video/getnew',
                 headers: {
                     token: config.app.auth.token
                 },
@@ -205,7 +227,7 @@ export class Video {
         let videos = [];
         return new Promise<Video[]>((success, fail) => {
             request.get({
-                uri: webUrl + '/api/video/getmirrored',
+                uri: apiUrl + '/video/getmirrored',
                 headers: {
                     token: config.app.auth.token
                 },
