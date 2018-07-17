@@ -31,12 +31,9 @@ export class YouTubeWorker {
      */
     cleanup() {
         let filePath = path.resolve(this.tempFolder, this.fileName);
-        fs.exists(filePath, (exists) => {
-            if(exists)
-                fs.unlink(filePath, (e) => {
-                    console.error("Can't remove temp file: %s", e);
-                });
-        });
+
+        if(fs.existsSync(filePath))
+            fs.unlinkSync(filePath);
     }
 
     /**
