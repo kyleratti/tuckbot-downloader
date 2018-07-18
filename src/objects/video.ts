@@ -1,5 +1,5 @@
 import * as request from "request-promise-native";
-import * as configurator from '../configurator';
+import configurator from 'a-mirror-web/src/configurator';
 import { wrap } from "..";
 
 import ytdl from 'ytdl-core';
@@ -10,8 +10,7 @@ import fs from 'fs';
 import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
 
-const config = configurator.load();
-const apiUrl = config.app.apiUrl;
+const apiUrl = configurator.app.apiUrl;
 
 const robotWords = [
     "Beep boop bop.",
@@ -71,7 +70,7 @@ export class Video {
             request.get({
                 uri: apiUrl + `/video/getinfo/${this.redditPostId}`,
                 headers: {
-                    token: config.app.auth.token
+                    token: configurator.auth.token
                 },
                 json: true
             })
@@ -85,7 +84,7 @@ export class Video {
             request.put({
                 uri: apiUrl + '/video/add',
                 body: {
-                    token: config.app.auth.token,
+                    token: configurator.auth.token,
                     redditPostId: this.redditPostId,
                     videoUrl: this.post.url
                 },
@@ -99,7 +98,7 @@ export class Video {
     update(options:UpdateOptions) {
         return new Promise((success, fail) => {
             let updatedData = {
-                token: config.app.auth.token,
+                token: configurator.auth.token,
                 redditPostId: this.post.id,
             }
 
@@ -151,7 +150,7 @@ export class Video {
             request.put({
                 uri: apiUrl + '/video/upload',
                 formData: {
-                    token: config.app.auth.token,
+                    token: configurator.auth.token,
                     redditPostId: this.redditPostId,
                     video: {
                         value: fs.createReadStream(filePath),
@@ -210,7 +209,7 @@ export class Video {
             request.get({
                 uri: apiUrl + '/video/getnew',
                 headers: {
-                    token: config.app.auth.token
+                    token: configurator.auth.token
                 },
                 json: true
             })
@@ -246,7 +245,7 @@ export class Video {
             request.get({
                 uri: apiUrl + '/video/getmirrored',
                 headers: {
-                    token: config.app.auth.token
+                    token: configurator.auth.token
                 },
                 json: true
             })

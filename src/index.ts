@@ -1,4 +1,4 @@
-import * as configurator from './configurator';
+import configurator from 'a-mirror-web/src/configurator';
 
 import snoowrap from 'snoowrap';
 import snoostorm from 'snoostorm';
@@ -9,18 +9,17 @@ import util from 'util';
 import { Video, Status } from './objects/video';
 
 // load config
-const config = configurator.load();
-const appToken = config.app.auth.token;
-const webUrl = config.app.webUrl;
-const cdnUrl = config.app.cdnUrl;
+const appToken = configurator.auth.token;
+const webUrl = configurator.app.webUrl;
+const cdnUrl = configurator.app.cdnUrl;
 
 // set up snoowrap
 export var wrap = new snoowrap({
-    userAgent: config.reddit.userAgent,
-    clientId: config.reddit.clientID,
-    clientSecret: config.reddit.clientSecret,
-    username: config.reddit.username,
-    password: config.reddit.password,
+    userAgent: configurator.reddit.userAgent,
+    clientId: configurator.reddit.clientID,
+    clientSecret: configurator.reddit.clientSecret,
+    username: configurator.reddit.username,
+    password: configurator.reddit.password,
 });
 
 wrap.config({
@@ -32,10 +31,10 @@ export var storm = new snoostorm(wrap);
 
 function runScanner() {
     // check that subs are set up, then subscribe to submission stream
-    if(config.reddit.scanSubsList.length <= 0)
+    if(configurator.reddit.scanSubsList.length <= 0)
         throw new Error('Subreddit scan list is empty; aborting');
 
-    config.reddit.scanSubsList.forEach(subName => {
+    configurator.reddit.scanSubsList.forEach(subName => {
         console.log("Starting submission stream for /r/%s", subName);
 
         let stream = storm.SubmissionStream({
