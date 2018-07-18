@@ -66,16 +66,12 @@ export class Video {
      * @returns Whether or not this video exists in the database
      */
     exists() {
-        return new Promise((success, fail) => {
-            request.get({
-                uri: apiUrl + `/video/getinfo/${this.redditPostId}`,
-                headers: {
-                    token: configurator.auth.token
-                },
-                json: true
-            })
-                .then(success)
-                .catch(fail);
+        return request.get({
+            uri: apiUrl + `/video/getinfo/${this.redditPostId}`,
+            headers: {
+                token: configurator.auth.token
+            },
+            json: true
         });
     }
 
