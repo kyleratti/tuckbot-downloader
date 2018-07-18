@@ -76,50 +76,44 @@ export class Video {
     }
 
     create() {
-        return new Promise((success, fail) => {
-            request.put({
-                uri: apiUrl + '/video/add',
-                body: {
-                    token: configurator.auth.token,
-                    redditPostId: this.redditPostId,
-                    videoUrl: this.post.url
-                },
-                json: true
-            })
-                .then(success)
-                .catch(fail);
+        return request.put({
+            uri: apiUrl + '/video/add',
+            body: {
+                token: configurator.auth.token,
+                redditPostId: this.redditPostId,
+                videoUrl: this.post.url
+            },
+            json: true
         });
     }
 
     update(options:UpdateOptions) {
-        return new Promise((success, fail) => {
-            let updatedData = {
-                token: configurator.auth.token,
-                redditPostId: this.post.id,
-            }
+        let updatedData = {
+            token: configurator.auth.token,
+            redditPostId: this.post.id,
+        }
 
-            if(options.status)
-                updatedData['status'] = options.status;
+        if(options.status)
+            updatedData['status'] = options.status;
 
-            if(options.views)
-                updatedData['views'] = options.views;
+        if(options.views)
+            updatedData['views'] = options.views;
 
-            if(options.lastView)
-                updatedData['lastView'] = options.lastView;
+        if(options.lastView)
+            updatedData['lastView'] = options.lastView;
 
-            request.post({
-                uri: apiUrl + '/video/update',
-                body: updatedData,
-                json: true
-            })
-                .then(success)
-                .catch(fail);
+        return request.post({
+            uri: apiUrl + '/video/update',
+            body: updatedData,
+            json: true
         });
     }
 
     download() {
         return new Promise((success, fail) => {
-            this.update({status: Status.Downloading});
+            this.update({status: Status.Downloading})
+                .then(success)
+                .catch(fail);
 
             this.post.fetch().then((obj) => {
                 if(ytdl.validateURL(obj.url)) {
