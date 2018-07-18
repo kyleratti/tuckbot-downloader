@@ -1,5 +1,5 @@
 import * as request from "request-promise-native";
-import configurator from 'a-mirror-web/src/configurator';
+import configurator from 'a-mirror-util/lib/configurator';
 import { wrap } from "..";
 
 import ytdl from 'ytdl-core';

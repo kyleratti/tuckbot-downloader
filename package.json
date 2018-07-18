@@ -20,7 +20,7 @@
    },
    "homepage": "https://github.com/a-banana/a-mirror#readme",
    "dependencies": {
-      "a-mirror-web": "git+https://github.com/kyleratti/a-mirror-web.git",
+      "a-mirror-util": "git+https://github.com/kyleratti/a-mirror-util.git",
       "dotenv": "^6.0.0",
       "fs": "0.0.1-security",
       "microinject": "^0.5.2",

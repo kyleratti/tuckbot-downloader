@@ -1,4 +1,4 @@
-import configurator from 'a-mirror-web/src/configurator';
+import configurator from 'a-mirror-util/lib/configurator';
 
 import snoowrap from 'snoowrap';
 import snoostorm from 'snoostorm';
