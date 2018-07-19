@@ -18,7 +18,12 @@ export default class ReplyScanner extends Scanner {
                     console.log(`attempting reply for ${vid.redditPostId}`);
 
                     vid.reply(util.format("#Here's a [mirror of this video](https://amirror.link/%s)", vid.redditPostId))
-                        .then(() => {
+                        .then((reply:any) => {
+                            reply.approve();
+                            reply.distinguish({
+                                status: true,
+                                sticky: true
+                            });
                             console.log(`posted reply`);
                             vid.update({
                                 status: Status.PostedLocalMirror
