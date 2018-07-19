@@ -16,6 +16,7 @@ export default class MirrorRequestScanner extends Scanner {
                     console.log(`attempting download for ${vid.redditPostId}`);
                     vid.download()
                         .then(() => {
+                            console.log(`download finished`);
                             vid.upload().then(() => {
                                 vid.update({ status: Status.LocallyMirrored });
                                 console.log(`successfully uploaded video ${vid.redditPostId}`);
