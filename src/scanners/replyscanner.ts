@@ -26,7 +26,6 @@ export default class ReplyScanner extends Scanner {
                         })
                         .catch(err => {
                             // FIXME: this needs to check to see if we are rate limited
-                            console.log(err);
                             console.error(`failed replying to message: ${err}`);
                         });
                 });
