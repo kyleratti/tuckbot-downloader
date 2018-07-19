@@ -135,19 +135,26 @@ export class Video {
         let fileName = this.redditPostId + '.mp4';
         let filePath = path.resolve(configurator.file.local.storageDir, fileName);
 
-        return request.put({
-            uri: apiUrl + '/video/upload',
-            formData: {
-                token: configurator.auth.token,
-                redditPostId: this.redditPostId,
-                video: {
-                    value: fs.createReadStream(filePath),
-                    options: {
-                        filename: fileName,
-                        contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
+        return new Promise((success, fail) => {
+            request.put({
+                uri: apiUrl + '/video/upload',
+                formData: {
+                    token: configurator.auth.token,
+                    redditPostId: this.redditPostId,
+                    video: {
+                        value: fs.createReadStream(filePath),
+                        options: {
+                            filename: fileName,
+                            contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
+                        }
                     }
                 }
-            }
+            }).then(() => {
+                if(fs.existsSync(filePath))
+                    fs.unlinkSync(filePath);
+                    
+                success();
+            });
         });
     }
 
