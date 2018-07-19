@@ -9,8 +9,6 @@ import fs from 'fs';
 import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
 
-console.log(configurator);
-
 const apiUrl = configurator.app.apiUrl;
 
 const robotWords = [
