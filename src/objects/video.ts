@@ -1,5 +1,5 @@
 import * as request from "request-promise-native";
-import { configurator, snooman } from 'a-mirror-util/lib/configurator';
+import { configurator, snooman } from 'a-mirror-util/lib/';
 
 import ytdl from 'ytdl-core';
 import path from 'path';
