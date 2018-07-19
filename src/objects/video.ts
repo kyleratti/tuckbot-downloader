@@ -118,7 +118,7 @@ export class Video {
                 if(ytdl.validateURL(obj.url)) {
                     let worker = new YouTubeWorker({
                         video: this,
-                        tempFolder: '/tmp/videos/',
+                        tempFolder: configurator.file.local.storageDir,
                         fileName: this.redditPostId + '.mp4'
                     });
                     worker.start()
@@ -133,34 +133,23 @@ export class Video {
 
     upload() {
         let fileName = this.redditPostId + '.mp4';
-        let filePath = path.resolve('/tmp/videos/', fileName);
+        let filePath = path.resolve(configurator.file.local.storageDir, fileName);
 
-        return new Promise((success, fail) => {
-            request.put({
-                uri: apiUrl + '/video/upload',
-                formData: {
-                    token: configurator.auth.token,
-                    redditPostId: this.redditPostId,
-                    video: {
-                        value: fs.createReadStream(filePath),
-                        options: {
-                            filename: fileName,
-                            contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
-                        }
+        console.log(`file path: ${filePath}`);
+
+        return request.put({
+            uri: apiUrl + '/video/upload',
+            formData: {
+                token: configurator.auth.token,
+                redditPostId: this.redditPostId,
+                video: {
+                    value: fs.createReadStream(filePath),
+                    options: {
+                        filename: fileName,
+                        contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
                     }
                 }
-            })
-                .then(() => {
-                    let filePath = path.resolve('/tmp/videos/', this.redditPostId + '.mp4');
-                    fs.exists(filePath, (exists) => {
-                        if(exists)
-                            fs.unlink(filePath, (e) => {
-                                console.error("Can't remove temp file: %s", e);
-                            });
-                    });
-                    success();
-                })
-                .catch(fail);
+            }
         });
     }
 
