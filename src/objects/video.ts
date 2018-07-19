@@ -36,6 +36,10 @@ export enum Status {
     TranscodingFailed = 200,
 }
 
+export enum StorageLocation {
+    Local = 0,
+}
+
 export interface UpdateOptions {
     /** The status of the video */
     status?: Status,
