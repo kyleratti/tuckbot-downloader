@@ -43,4 +43,3 @@ The following subreddits rely on **a-mirror** for his holy botness:
 * reddit video support
 * Gfycat support
 * imgur support
-* `!mirror` comment support to attempt to mirror the OP/the link in the parent comment
