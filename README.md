@@ -34,12 +34,15 @@ The following subreddits rely on **a-mirror** for his holy botness:
 * ...no one else! :-(
 
 ## Current Features
-
 * Mirroring of YouTube linked posts (note that we are limited by region blocks)
 
 ### Planned Features
-
 * `webm` conversion for reduced bandwidth and file sizes
 * reddit video support
 * Gfycat support
 * imgur support
+
+# And a standing ovation to...
+I absolutely *cannot* thank **[RoboPhred](https://github.com/robophred)** enough for this help with this project and every single project I've worked on for the past decade. You are, without a doubt, the smartest man I'll ever know and the only reason I can program in any of the languages I know. Your patience with me over the years is nothing short of astounding.
+
+Here's to you man!
