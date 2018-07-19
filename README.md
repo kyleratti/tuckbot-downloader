@@ -11,8 +11,13 @@ a-mirror has a lot of pieces that all rely on each other to work:
 * [a-mirror-util](https://github.com/kyleratti/a-mirror/) - A few utility things that are standardized across a-mirror
 * [a-mirror-web](https://github.com/kyleratti/a-mirror-web/) - The public, cdn, and api server
 
+At a glance it probably looks stupid to split the project into 5 parts, but I assure you it's done for good reasons:
+* Infrastructure can be moved as necessary. For example: I can handle the CPU-intensive transcoding process on my dedicated servers while leaving much smaller cloud VM's to serve web traffic
+* The downloaders and transcoders can be easily scaled to additional servers as demand dictates
+* The API can dynamically decide where to store (and therefore how to serve) videos without changing the downloaders or transcoders
+
 ## Retention Policy
-The **a-mirror** bot will retain mirrored videos for up to 30 days. Anything beyond that is not guaranteed. If you're interested in using **a-mirror** on your subreddit but need a longer retention period, please [contact the author](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20retention%20period).
+**a-mirror** bot will retain mirrored videos for up to 30 days. Anything beyond that is not guaranteed. If you're interested in using **a-mirror** on your subreddit but need a longer retention period, please [contact the author](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20retention%20period).
 
 ## Data Processing and Data Collected
 I have no interest in your personal data; **a-mirror** collects only the data it needs to function via reddit's public API. In addition to needing the URL of the original submission, the date/time of the mirror, its status, and number of views are all necessary for use with the retention policy listed above. Because I feel like it'll come up, view counting is a number in a database; no identifying information is stored with it. The date and time of the last view is, again, only stored to assist with the retention policy.
