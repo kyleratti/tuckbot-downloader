@@ -135,8 +135,6 @@ export class Video {
         let fileName = this.redditPostId + '.mp4';
         let filePath = path.resolve(configurator.file.local.storageDir, fileName);
 
-        console.log(`file path: ${filePath}`);
-
         return request.put({
             uri: apiUrl + '/video/upload',
             formData: {
