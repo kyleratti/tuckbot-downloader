@@ -5,6 +5,8 @@ import { Video, Status } from '../objects/video';
 export default class MirrorRequestScanner extends Scanner {
     constructor(options: ConfigOptions) {
         super(options);
+
+        console.log(`starting mirror request scanner at ${options.scanInterval}ms interval`);
     }
     
     start() {

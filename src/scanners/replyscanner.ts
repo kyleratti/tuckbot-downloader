@@ -7,6 +7,8 @@ import { Video, Status } from '../objects/video';
 export default class ReplyScanner extends Scanner {
     constructor(options: ConfigOptions) {
         super(options);
+
+        console.log(`starting reply scanner at ${options.scanInterval}ms interval`);
     }
 
     start() {
