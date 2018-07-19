@@ -1,6 +1,5 @@
 import * as request from "request-promise-native";
-import configurator from 'a-mirror-util/lib/configurator';
-import { wrap } from "..";
+import { configurator, snooman } from 'a-mirror-util/lib/configurator';
 
 import ytdl from 'ytdl-core';
 import path from 'path';
@@ -9,6 +8,8 @@ import fs from 'fs';
 
 import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
+
+console.log(configurator);
 
 const apiUrl = configurator.app.apiUrl;
 
@@ -182,7 +183,7 @@ export class Video {
      */
     static findById(redditPostId) {
         return new Promise((success, fail) => {
-            wrap.getSubmission(redditPostId).fetch()
+            snooman.wrap.getSubmission(redditPostId).fetch()
                 .then(post => {
                     success(new Video(post))
                 });
