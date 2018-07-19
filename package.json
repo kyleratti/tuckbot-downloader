@@ -30,7 +30,6 @@
       "request": "^2.87.0",
       "request-promise-native": "^1.0.5",
       "sequelize": "^4.38.0",
-      "snoostorm": "0.0.5",
       "snoowrap": "^1.15.2",
       "sqlite3": "^4.0.2",
       "util": "^0.11.0",
