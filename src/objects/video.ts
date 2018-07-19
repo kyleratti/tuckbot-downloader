@@ -111,23 +111,23 @@ export class Video {
     download() {
         return new Promise((success, fail) => {
             this.update({status: Status.Downloading})
-                .then(success)
-                .catch(fail);
-
-            this.post.fetch().then((obj) => {
-                if(ytdl.validateURL(obj.url)) {
-                    let worker = new YouTubeWorker({
-                        video: this,
-                        tempFolder: configurator.file.local.storageDir,
-                        fileName: this.redditPostId + '.mp4'
+                .then(() => {
+                    this.post.fetch().then((obj) => {
+                        if(ytdl.validateURL(obj.url)) {
+                            let worker = new YouTubeWorker({
+                                video: this,
+                                tempFolder: configurator.file.local.storageDir,
+                                fileName: this.redditPostId + '.mp4'
+                            });
+                            worker.start()
+                                .then(success)
+                                .catch(fail);
+                        } else {
+                            console.error(`invalid video type for ${obj.url}`);
+                        }
                     });
-                    worker.start()
-                        .then(success)
-                        .catch(fail);
-                } else {
-                    console.error(`invalid video type for ${obj.url}`);
-                }
-            });
+                })
+                .catch(fail);
         });
     }
 
