@@ -9,6 +9,8 @@ import fs from 'fs';
 import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
 
+const processingDir = '/tmp/videos/';
+
 const apiUrl = configurator.app.apiUrl;
 
 const robotWords = [
@@ -116,7 +118,7 @@ export class Video {
                         if(ytdl.validateURL(obj.url)) {
                             let worker = new YouTubeWorker({
                                 video: this,
-                                tempFolder: configurator.file.local.storageDir,
+                                tempFolder: processingDir,
                                 fileName: this.redditPostId + '.mp4'
                             });
                             worker.start()
@@ -133,7 +135,8 @@ export class Video {
 
     upload() {
         let fileName = this.redditPostId + '.mp4';
-        let filePath = path.resolve(configurator.file.local.storageDir, fileName);
+        let filePath = path.resolve(processingDir, fileName);
+        let processingPath = path.resolve(processingDir, fileName);
 
         return new Promise((success, fail) => {
             request.put({
@@ -150,11 +153,12 @@ export class Video {
                     }
                 }
             }).then(() => {
-                if(fs.existsSync(filePath))
-                    fs.unlinkSync(filePath);
-                    
+                if(fs.existsSync(processingPath))
+                    fs.unlinkSync(processingPath);
+
                 success();
-            });
+            })
+            .catch(fail);
         });
     }
 
