@@ -6,9 +6,10 @@ This library polls the api for new mirror requests and attempts to fulfill them.
 a-mirror has a lot of pieces that all rely on each other to work:
 
 * [a-mirror](https://github.com/kyleratti/a-mirror/) - (you are here)
-* [a-mirror-web](https://github.com/kyleratti/a-mirror-web/) - The public, cdn, and api server
 * [a-mirror-scanner](https://github.com/kyleratti/a-mirror/) - The subreddit scanning server
+* [a-mirror-transcoder](https://github.com/kyleratti/a-mirror/transcoder/) - The video transcoder
 * [a-mirror-util](https://github.com/kyleratti/a-mirror/) - A few utility things that are standardized across a-mirror
+* [a-mirror-web](https://github.com/kyleratti/a-mirror-web/) - The public, cdn, and api server
 
 ## Retention Policy
 The **a-mirror** bot will retain mirrored videos for up to 30 days. Anything beyond that is not guaranteed. If you're interested in using **a-mirror** on your subreddit but need a longer retention period, please [contact the author](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20retention%20period).
