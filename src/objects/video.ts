@@ -9,7 +9,7 @@ import fs from 'fs';
 import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
 
-const processingDir = '/tmp/videos/';
+const processingDir = configurator.file.processingDir;
 
 const apiUrl = configurator.app.apiUrl;
 
