@@ -178,7 +178,7 @@ export class Video {
                     token: configurator.auth.token,
                     redditPostId: this.redditPostId,
                     video: {
-                        value: fs.readFileSync(this.processingPath),
+                        value: fs.createReadStream(this.processingPath, { flags: 'r+' }),
                         options: {
                             filename: fileName,
                             contentType: 'video/mp4'
