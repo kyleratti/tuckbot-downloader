@@ -12,7 +12,7 @@ export interface ConfigOptions {
     fileName: string,
 }
 
-export class YouTubeWorker {
+export class DownloadWorker {
     /** The Video object this worker is attached to */
     video: Video;
     /** The full path to the temporary folder of the video file */

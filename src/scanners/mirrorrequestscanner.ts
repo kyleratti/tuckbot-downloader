@@ -16,21 +16,24 @@ export default class MirrorRequestScanner extends Scanner {
                     console.log(`attempting download for ${vid.redditPostId}`);
                     vid.download()
                         .then(() => {
-                            console.log(`download finished`);
-                            vid.upload().then(() => {
-                                vid.update({ status: Status.LocallyMirrored });
-                                console.log(`successfully uploaded video ${vid.redditPostId}`);
-                            })
-                            .catch((err) => {
-                                console.error(`failed to upload video: ${err}`);
-                            });
+                            console.log(`done downloading ${vid.redditPostId}, updating status`);
+                            vid.update({ status: Status.Downloaded })
+                                .then(() => {
+                                    console.log(`updated status on ${vid.redditPostId}, uploading`);
+                                    vid.upload()
+                                        .then(() => {
+                                            console.log(`successfully uploaded video ${vid.redditPostId}`);
+                                        })
+                                        .catch((err) => {
+                                            console.error(`${err}`)
+                                        });
+                                })
+                                .catch((err) => {
+                                    console.error(`failed to upload ${vid.redditPostId}: ${err}`);
+                                });
                         })
-                        .catch(err => {
-                            if(err.message === 'Error: This video is unavailable.') {
-                                console.error(`updating with unavailable state`);
-                                vid.update({ status: Status.VideoUnavailable });
-                            }
-                            console.error(`download error: ${err}`);
+                        .catch((err) => {
+                            console.error(`error on ${vid.redditPostId}: ${err}`);
                         });
                 });
             })

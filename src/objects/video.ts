@@ -1,12 +1,12 @@
 import * as request from "request-promise-native";
 import { configurator, snooman } from 'a-mirror-util/lib/';
 
-import ytdl from 'ytdl-core';
+import ytdl, { getURLVideoID } from 'ytdl-core';
+import youtubedl from 'youtube-dl';
 import path from 'path';
 import util from 'util';
 import fs from 'fs';
 
-import { YouTubeWorker } from "../workers/YouTubeWorker";
 import { Submission } from "snoowrap";
 
 const processingDir = configurator.file.processingDir;
@@ -23,7 +23,10 @@ const robotWords = [
 
 export enum Status {
     NewRequest = 0,
+
     Downloading = 10,
+    Downloaded = 11,
+
     Transcoding = 20,
 
     LocallyMirrored = 40,
@@ -53,17 +56,20 @@ export interface UpdateOptions {
 
 export class Video {
     /** The snoowrap post object */
-    public post:Submission;
+    public post: Submission;
     /** The unique reddit post id */
-    public redditPostId:string;
+    public redditPostId: string;
+    /** The processing path to the file */
+    private processingPath: string;
 
     /**
      * Creates a new Video object
      * @param identifier The unique identifier of the post (either a snoowrap post object or a reddit post id)
      */
-    constructor(post:Submission) {
+    constructor(post: Submission) {
         this.post = post;
         this.redditPostId = post.id;
+        this.processingPath = path.resolve(processingDir, this.redditPostId + '.mp4');
     }
 
     /**
@@ -116,22 +122,38 @@ export class Video {
 
     download() {
         return new Promise((success, fail) => {
-            this.update({status: Status.Downloading})
+            this.update({ status: Status.Downloading })
                 .then(() => {
-                    this.post.fetch().then((obj) => {
-                        if(ytdl.validateURL(obj.url)) {
-                            let worker = new YouTubeWorker({
-                                video: this,
-                                tempFolder: processingDir,
-                                fileName: this.redditPostId + '.mp4'
-                            });
-                            worker.start()
-                                .then(success)
-                                .catch(fail);
-                        } else {
-                            console.error(`invalid video type for ${obj.url}`);
-                        }
+                    if(!fs.existsSync(processingDir))
+                        fs.mkdirSync(processingDir);
+
+                    let downloadUrl = this.post.url;
+
+                    console.log(downloadUrl.substr(0, 18));
+
+                    /*if(downloadUrl.substr(0, 18) === 'https://v.redd.it/' || downloadUrl.substr(0, 25) === 'https://www.reddit.com/r/')
+                        downloadUrl += '/DASHPlaylist.mpd';*/
+
+                    console.log(downloadUrl);
+
+                    let dl = youtubedl(downloadUrl, [
+                        //'--format=bestvideo[height<=720]+bestaudio/best[height<=720]'
+                        '--format=mp4',
+                        '--prefer-ffmpeg',
+                        '--merge-output-format=mp4',
+                        '--hls-prefer-ffmpeg'
+                    ], {
+                        cwd: processingDir
                     });
+                    dl.on('info', (info) => {
+                        // TODO: something with this data
+                    });
+                    dl.pipe(fs.createWriteStream(this.processingPath));
+                    dl.on('end', success);
+                    dl.on('complete', (info) => {
+                        // TODO: something with this event (update status to done downloading?)
+                    });
+                    dl.on('error', fail);
                 })
                 .catch(fail);
         });
@@ -139,8 +161,8 @@ export class Video {
 
     upload() {
         let fileName = this.redditPostId + '.mp4';
-        let filePath = path.resolve(processingDir, fileName);
-        let processingPath = path.resolve(processingDir, fileName);
+
+        console.log(`processingPath: ${this.processingPath}`);
 
         return new Promise((success, fail) => {
             request.put({
@@ -149,16 +171,16 @@ export class Video {
                     token: configurator.auth.token,
                     redditPostId: this.redditPostId,
                     video: {
-                        value: fs.createReadStream(filePath),
+                        value: fs.createReadStream(this.processingPath),
                         options: {
                             filename: fileName,
-                            contentType: fileName === '.mp4' ? 'video/mp4' : 'video/webm'
+                            contentType: 'video/mp4'
                         }
                     }
                 }
             }).then(() => {
-                if(fs.existsSync(processingPath))
-                    fs.unlinkSync(processingPath);
+                if(fs.existsSync(this.processingPath))
+                    fs.unlinkSync(this.processingPath);
 
                 success();
             })
