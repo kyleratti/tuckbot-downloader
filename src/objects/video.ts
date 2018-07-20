@@ -172,7 +172,7 @@ export class Video {
         console.log(`processingPath: ${this.processingPath}`);
 
         return new Promise((success, fail) => {
-            request.put({
+            request.post({
                 uri: apiUrl + '/video/upload',
                 formData: {
                     token: configurator.auth.token,
