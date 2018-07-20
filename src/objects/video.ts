@@ -149,7 +149,14 @@ export class Video {
                         // TODO: something with this data
                     });
                     dl.pipe(fs.createWriteStream(this.processingPath));
-                    dl.on('end', success);
+                    dl.on('end', () => {
+                        console.log(`done downloading ${this.redditPostId}, updating status`);
+                        this.update({ status: Status.Downloaded })
+                            .then(() => {
+                                success();
+                            })
+                            .catch(fail);
+                    });
                     dl.on('complete', (info) => {
                         // TODO: something with this event (update status to done downloading?)
                     });
@@ -160,7 +167,7 @@ export class Video {
     }
 
     upload() {
-        let fileName = this.redditPostId + '.mp4';
+        let fileName = path.basename(this.processingPath);
 
         console.log(`processingPath: ${this.processingPath}`);
 
