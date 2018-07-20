@@ -22,7 +22,7 @@ export default class ReplyScanner extends Scanner {
                             reply.approve();
                             reply.distinguish({
                                 status: true,
-                                sticky: true
+                                sticky: false
                             });
                             console.log(`posted reply`);
                             vid.update({
