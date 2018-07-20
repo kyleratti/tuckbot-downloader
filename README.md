@@ -6,9 +6,9 @@ This library polls the api for new mirror requests and attempts to fulfill them.
 a-mirror has a lot of pieces that all rely on each other to work:
 
 * [a-mirror](https://github.com/kyleratti/a-mirror/) - (you are here)
-* [a-mirror-scanner](https://github.com/kyleratti/a-mirror/) - The subreddit scanning server
+* [a-mirror-scanner](https://github.com/kyleratti/a-mirror-scanner/) - The subreddit scanning server
 * [a-mirror-transcoder](https://github.com/kyleratti/a-mirror/transcoder/) - The video transcoder
-* [a-mirror-util](https://github.com/kyleratti/a-mirror/) - A few utility things that are standardized across a-mirror
+* [a-mirror-util](https://github.com/kyleratti/a-mirror-util/) - A few utility things that are standardized across a-mirror
 * [a-mirror-web](https://github.com/kyleratti/a-mirror-web/) - The public, cdn, and api server
 
 At a glance it probably looks stupid to split the project into 5 parts, but I assure you it's done for good reasons:
