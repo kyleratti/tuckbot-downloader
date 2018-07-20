@@ -64,7 +64,6 @@ typings/
 .DS_Store
 
 # app
-/lib/
 /storage/
 ormconfig.json
 /dts/
