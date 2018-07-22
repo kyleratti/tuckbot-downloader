@@ -202,7 +202,7 @@ export class Video {
         let i = Math.floor(Math.random() * robotWords.length);
         let robotSpeak = robotWords[i];
 
-        return this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://github.com/kyleratti/a-mirror-downloader)", message, robotSpeak));
+        return this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://amirror.link/source)", message, robotSpeak));
     }
 
     /**
