@@ -136,10 +136,8 @@ export class Video {
                     let downloadUrl = this.post.url;
 
                     let dl = youtubedl(downloadUrl, [
-                        '--format=mp4',
                         '--prefer-ffmpeg',
-                        '--merge-output-format=mp4',
-                        '--hls-prefer-ffmpeg'
+                        '--merge-output-format=mp4'
                     ], {
                         cwd: processingDir
                     });
