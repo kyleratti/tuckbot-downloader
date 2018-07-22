@@ -37,6 +37,7 @@ Only the below sites/services are supported by **a-mirror**:
 The following subreddits rely on **a-mirror** for his holy botness:
 
 * [/r/WranglerYJ](https://reddit.com/r/WranglerYJ) (doesn't really count since I'm a mod here)
+* [/r/PublicFreakout](https://reddit.com/r/PublicFreakout)
 * ...no one else! :-(
 
 ## Current Features
