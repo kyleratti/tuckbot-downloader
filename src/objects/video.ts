@@ -75,7 +75,7 @@ export class Video {
     constructor(post: Submission) {
         this.post = post;
         this.redditPostId = post.id;
-        this.processingPath = path.resolve(processingDir, this.redditPostId + '.mp4');
+        this.processingPath = path.resolve(processingDir, this.redditPostId + '.webm');
     }
 
     /**
@@ -135,11 +135,14 @@ export class Video {
 
                     let downloadUrl = this.post.url;
 
+                    console.log(downloadUrl.substr(0, 18));
+
+                    if(downloadUrl.substr(0, 18) === 'https://v.redd.it/')
+                        downloadUrl += '/DASHPlaylist.mpd';
+
                     let dl = youtubedl(downloadUrl, [
-                        '--format=mp4',
                         '--prefer-ffmpeg',
-                        '--merge-output-format=mp4',
-                        '--hls-prefer-ffmpeg'
+                        '--merge-output-format=webm'
                     ], {
                         cwd: processingDir
                     });
@@ -179,7 +182,7 @@ export class Video {
                         value: fs.createReadStream(this.processingPath, { flags: 'r+' }),
                         options: {
                             filename: fileName,
-                            contentType: 'video/mp4'
+                            contentType: 'video/webm'
                         }
                     }
                 }
