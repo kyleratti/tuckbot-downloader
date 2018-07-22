@@ -5,7 +5,7 @@ This library polls the api for new mirror requests and attempts to fulfill them.
 
 a-mirror has a lot of pieces that all rely on each other to work:
 
-* [a-mirror](https://github.com/kyleratti/a-mirror/) - (you are here)
+* [a-mirror-downloader](https://github.com/kyleratti/a-mirror-downloader/) - (you are here)
 * [a-mirror-scanner](https://github.com/kyleratti/a-mirror-scanner/) - The subreddit scanning server
 * [a-mirror-transcoder](https://github.com/kyleratti/a-mirror/transcoder/) - The video transcoder
 * [a-mirror-util](https://github.com/kyleratti/a-mirror-util/) - A few utility things that are standardized across a-mirror
