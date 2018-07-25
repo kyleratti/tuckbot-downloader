@@ -15,6 +15,8 @@ At a glance it probably looks stupid to split the project into 5 parts, but I as
 * The downloaders can be easily scaled to additional servers as necessary
 * The API can dynamically decide where to store (and therefore how to serve) videos without changing the downloaders
 
+This project also utilizes [a-centralized-mirror](https://github.com/kyleratti/a-centralized-mirror/) to do the actual posting of comments.
+
 ## Retention Policy
 **a-mirror** bot will retain mirrored videos for up to 30 days. Anything beyond that is not guaranteed. If you're interested in using **a-mirror** on your subreddit but need a longer retention period, please [contact the author](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20retention%20period).
 
