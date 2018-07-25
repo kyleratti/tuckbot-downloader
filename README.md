@@ -7,7 +7,6 @@ a-mirror has a lot of pieces that all rely on each other to work:
 
 * [a-mirror-downloader](https://github.com/kyleratti/a-mirror-downloader/) - (you are here)
 * [a-mirror-scanner](https://github.com/kyleratti/a-mirror-scanner/) - The subreddit scanning server
-* [a-mirror-transcoder](https://github.com/kyleratti/a-mirror/transcoder/) - The video transcoder
 * [a-mirror-util](https://github.com/kyleratti/a-mirror-util/) - A few utility things that are standardized across a-mirror
 * [a-mirror-web](https://github.com/kyleratti/a-mirror-web/) - The public, cdn, and api server
 
