@@ -27,7 +27,10 @@ export default class ReplyScanner extends Scanner {
                             console.log(`posted reply`);
                             vid.update({
                                 status: Status.PostedLocalMirror
-                            });
+                            })
+                                .catch(err => {
+                                    console.error(`failed updating status on ${vid.redditPostId}: ${err}`);
+                                });
                         })
                         .catch(err => {
                             // FIXME: this needs to check to see if we are rate limited
