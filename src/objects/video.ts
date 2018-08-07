@@ -248,7 +248,8 @@ export class Video {
 
                                 if(i >= total)
                                     success(videos);
-                            });
+                            })
+                            .catch(fail);;
                     });
                 })
                 .catch(fail)
