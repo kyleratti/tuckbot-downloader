@@ -214,8 +214,9 @@ export class Video {
             snooman.wrap.getSubmission(redditPostId).fetch()
                 .then(post => {
                     success(new Video(post))
-                });
-        });
+                })
+                .catch(fail);
+        })
     }
 
     /**
