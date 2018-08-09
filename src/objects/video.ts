@@ -188,13 +188,14 @@ export class Video {
         console.log(`processingPath: ${this.processingPath}`);
 
         return new Promise((success, fail) => {
+            let readStream = fs.createReadStream(this.processingPath, { flags: 'r+' });
             request.post({
                 uri: apiUrl + '/video/upload',
                 formData: {
                     token: configurator.auth.token,
                     redditPostId: this.redditPostId,
                     video: {
-                        value: fs.createReadStream(this.processingPath, { flags: 'r+' }),
+                        value: readStream,
                         options: {
                             filename: fileName,
                             contentType: 'video/mp4'
@@ -202,6 +203,7 @@ export class Video {
                     }
                 }
             }).then(() => {
+                readStream.close();
                 console.log(`finished upload for ${this.redditPostId}. processing path: ${this.processingPath}`);
                 fs.unlinkSync(this.processingPath);
 
