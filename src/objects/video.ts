@@ -155,6 +155,9 @@ export class Video {
 
                     let downloadUrl = this.post.url;
 
+                    if (downloadUrl.substr(0, 18) === 'https://v.redd.it/')
+                        downloadUrl += '/DASHPlaylist.mpd';
+
                     let dl = youtubedl(downloadUrl, [
                         '--prefer-ffmpeg',
                         '--merge-output-format=mp4'
