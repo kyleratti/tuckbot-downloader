@@ -3,7 +3,7 @@ import { MirrorRequestScanner, ReplyScanner } from './scanners';
 export default class {
     start() {
         let mirrorReqScanner = new MirrorRequestScanner({
-            scanInterval: 1000 * 60 * 2
+            scanInterval: 1000 * 20
         });
         mirrorReqScanner.start();
 
