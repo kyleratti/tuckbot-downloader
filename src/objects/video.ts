@@ -179,9 +179,15 @@ export class Video {
                     dl.on('complete', (info) => {
                         // TODO: something with this event (update status to done downloading?)
                     });
-                    dl.on('error', fail);
+                    dl.on('error', err => {
+                        fs.unlinkSync(this.processingPath);
+                        fail(err);
+                    });
                 })
-                .catch(fail);
+                .catch(err => {
+                    fs.unlinkSync(this.processingPath);
+                    fail(err);
+                });
         });
     }
 
