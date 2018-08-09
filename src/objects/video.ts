@@ -206,7 +206,7 @@ export class Video {
                     }
                 }
             }).then(() => {
-                readStream.close();
+                readStream.destroy();
                 console.log(`finished upload for ${this.redditPostId}. processing path: ${this.processingPath}`);
                 fs.unlinkSync(this.processingPath);
 
