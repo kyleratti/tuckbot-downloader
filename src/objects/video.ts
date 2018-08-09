@@ -202,6 +202,7 @@ export class Video {
                     }
                 }
             }).then(() => {
+                console.log(`finished upload for ${this.redditPostId}. processing path: ${this.processingPath}`);
                 if(fs.existsSync(this.processingPath))
                     fs.unlinkSync(this.processingPath);
 
