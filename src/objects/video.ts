@@ -212,7 +212,11 @@ export class Video {
 
                 success();
             })
-            .catch(fail);
+            .catch(err => {
+                readStream.destroy();
+                fs.unlinkSync(this.processingPath);
+                fail(err);
+            });
         });
     }
 
