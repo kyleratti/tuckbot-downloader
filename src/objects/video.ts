@@ -168,7 +168,7 @@ export class Video {
         return this.post.reply(
             `${message}
                 
-            [^share ^your ^thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) ^or [^want ^to ^see ^my ^programming?](https://amirror.link/source)`);
+[^share ^your ^thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) | [^look ^at ^my ^my ^programming?](https://amirror.link/source)`);
     }
 
     /**
