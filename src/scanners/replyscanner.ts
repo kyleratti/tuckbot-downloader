@@ -17,7 +17,7 @@ export default class ReplyScanner extends Scanner {
                 videos.forEach(vid => {
                     console.log(`attempting reply for ${vid.redditPostId}`);
 
-                    vid.reply(util.format("#Here's a [mirror of this video](https://amirror.link/%s)", vid.redditPostId))
+                    vid.reply(util.format("[Mirror](https://amirror.link/%s)", vid.redditPostId))
                         .then((reply:any) => {
                             reply.approve();
                             reply.distinguish({
