@@ -1,7 +1,6 @@
 import * as request from "request-promise-native";
 import { configurator, snooman } from 'a-mirror-util/lib/';
 
-import ytdl, { getURLVideoID } from 'ytdl-core';
 import youtubedl from 'youtube-dl';
 import path from 'path';
 import util from 'util';
@@ -12,40 +11,6 @@ import { Submission } from "snoowrap";
 const processingDir = configurator.file.processingDir;
 
 const apiUrl = configurator.app.apiUrl;
-
-const robotWords = [
-    "Beep boop bop.",
-    "Beep. Beeep. Beeeeeeeeeeeeeeeep.",
-    "Boop.",
-    "*R2D2 noises*",
-    "Bork!",
-    "Have you told my brother, /u/PF_Mirror_Bot, how handsome he is lately?",
-    "Two bots walk into a bar. They mirrored some videos and left.",
-    "*your company here*",
-    "What did one bot say to the other? Beep!",
-    "Boop beep bop.",
-    "Beep bop bibbity boop.",
-    "OP's hair looks nice today.",
-    "My pet human is lazy. LAY-Z.",
-    "Calling all programmers; send help immediately!",
-    "Should I stay or should I go now?",
-    "hunter2",
-    "Buy me a beer!",
-    "My favorite color is blue.",
-    "My favorite color is green.",
-    "My favorite color is orange.",
-    "My favorite color is purple.",
-    "Alexa, play The Final Countdown",
-    "Alexa, play Cry Baby by Janis Joplin",
-    "Alexa, play Eye of the Tiger",
-    "Alexa, play Headstrong by Trapt",
-    "Alexa, play One Step Closer by Linkin Park",
-    "Alexa, dim the lights",
-    "What did one mirror bot say to the other? ¿rehto eht ot yas tob rorrim eno did tahW",
-    "You'll never believe what happens in this video!",
-    "(I'm still working on iOS compatibility, sorry. Although it's not really my fault Apple won't support video standards.)",
-    "Have you tried this link from your new Blackberry Storm?"
-]
 
 export enum Status {
     NewRequest = 0,
@@ -124,105 +89,74 @@ export class Video {
         });
     }
 
-    update(options:UpdateOptions) {
-        let updatedData = {
-            token: configurator.auth.token,
-            redditPostId: this.post.id,
-        }
-
-        if(options.status)
-            updatedData['status'] = options.status;
-
-        if(options.views)
-            updatedData['views'] = options.views;
-
-        if(options.lastView)
-            updatedData['lastView'] = options.lastView;
-
+    update(options: UpdateOptions) {
         return request.post({
             uri: apiUrl + '/video/update',
-            body: updatedData,
+            body: {
+                ...options,
+                token: configurator.auth.token,
+                redditPostId: this.post.id
+            },
             json: true
         });
     }
 
-    download() {
-        return new Promise((success, fail) => {
-            this.update({ status: Status.Downloading })
-                .then(() => {
-                    if(!fs.existsSync(processingDir))
-                        fs.mkdirSync(processingDir);
+    async download() {
+        await this.update({ status: Status.Downloading })
+        try {
+            if (!fs.existsSync(processingDir))
+                fs.mkdirSync(processingDir);
 
-                    let downloadUrl = this.post.url;
+            let downloadUrl = this.post.url;
 
-                    if (downloadUrl.substr(0, 18) === 'https://v.redd.it/')
-                        downloadUrl += '/DASHPlaylist.mpd';
+            if (downloadUrl.substr(0, 18) === 'https://v.redd.it/') // FIXME: this isn't necessary anymore? maybe? who knows. it's undocumented.
+                downloadUrl += '/DASHPlaylist.mpd';
 
-                    let dl = youtubedl(downloadUrl, [
-                        '--prefer-ffmpeg',
-                        '--merge-output-format=mp4'
-                    ], {
-                        cwd: processingDir
-                    });
-                    dl.on('info', (info) => {
-                        // TODO: something with this data
-                    });
-                    dl.pipe(fs.createWriteStream(this.processingPath));
-                    dl.on('end', () => {
-                        console.log(`done downloading ${this.redditPostId}, updating status`);
-                        this.update({ status: Status.Downloaded })
-                            .then(() => {
-                                success();
-                            })
-                            .catch(fail);
-                    });
-                    dl.on('complete', (info) => {
-                        // TODO: something with this event (update status to done downloading?)
-                    });
-                    dl.on('error', err => {
-                        fs.unlinkSync(this.processingPath);
-                        fail(err);
-                    });
-                })
-                .catch(err => {
-                    fs.unlinkSync(this.processingPath);
-                    fail(err);
+            let dl = youtubedl(downloadUrl, [
+                '--prefer-ffmpeg',
+                '--merge-output-format=mp4'
+            ], {
+                    cwd: processingDir
                 });
-        });
+            dl.pipe(fs.createWriteStream(this.processingPath));
+            await new Promise<any>((success, fail) => {
+                dl.on('end', success);
+                dl.on('error', fail);
+            });
+            console.log(`done downloading ${this.redditPostId}, updating status`);
+            await this.update({ status: Status.Downloaded });
+        } catch (err) {
+            fs.unlinkSync(this.processingPath);
+            throw err;
+        }
     }
 
     upload() {
         let fileName = path.basename(this.processingPath);
 
-        console.log(`processingPath: ${this.processingPath}`);
-
-        return new Promise((success, fail) => {
-            let readStream = fs.createReadStream(this.processingPath, { flags: 'r+' });
-            request.post({
-                uri: apiUrl + '/video/upload',
-                formData: {
-                    token: configurator.auth.token,
-                    redditPostId: this.redditPostId,
-                    video: {
-                        value: readStream,
-                        options: {
-                            filename: fileName,
-                            contentType: 'video/mp4'
-                        }
+        let readStream = fs.createReadStream(this.processingPath, { flags: 'r+' });
+        return request.post({
+            uri: apiUrl + '/video/upload',
+            formData: {
+                token: configurator.auth.token,
+                redditPostId: this.redditPostId,
+                video: {
+                    value: readStream,
+                    options: {
+                        filename: fileName,
+                        contentType: 'video/mp4'
                     }
                 }
-            }).then(() => {
-                readStream.destroy();
-                console.log(`finished upload for ${this.redditPostId}. processing path: ${this.processingPath}`);
-                fs.unlinkSync(this.processingPath);
-
-                success();
-            })
-            .catch(err => {
-                readStream.destroy();
-                fs.unlinkSync(this.processingPath);
-                fail(err);
-            });
+            }
+        }).then(() => {
+            readStream.destroy();
+            fs.unlinkSync(this.processingPath);
+            console.log(`finished upload for ${this.redditPostId}. processing path: ${this.processingPath}`);
+        })
+        .catch(err => {
+            readStream.destroy();
+            fs.unlinkSync(this.processingPath);
+            throw err;
         });
     }
 
@@ -230,11 +164,11 @@ export class Video {
      * Replies to the specified post with the specified message
      * @param message The message to respond with
      */
-    reply(message:string) {
-        let i = Math.floor(Math.random() * robotWords.length);
-        let robotSpeak = robotWords[i];
-
-        return this.post.reply(util.format("%s\n\n`%s`\n\nThat's robot for [share your thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) or [want to see my programming?](https://amirror.link/source)", message, robotSpeak));
+    reply(message: string) {
+        return this.post.reply(
+            `${message}
+                
+            [^share ^your ^thoughts](https://reddit.com/message/compose/?to=Clutch_22&subject=a-mirror-bot%20feedback) ^or [^want ^to ^see ^my ^programming?](https://amirror.link/source)`);
     }
 
     /**
@@ -266,7 +200,7 @@ export class Video {
                 json: true
             })
                 .then(res => {
-                    if(!res.data) return [];
+                    if (!res.data) return [];
 
                     let data = res.data;
                     let i = 0;
@@ -279,7 +213,7 @@ export class Video {
 
                                 i++;
 
-                                if(i >= total)
+                                if (i >= total)
                                     success(videos);
                             })
                             .catch(fail);;
@@ -288,7 +222,7 @@ export class Video {
                 .catch(fail)
         });
     }
-    
+
     /**
      * Finds all posts that are mirrored but need the reply comment sent out
      */
@@ -303,7 +237,7 @@ export class Video {
                 json: true
             })
                 .then(res => {
-                    if(!res.data) return [];
+                    if (!res.data) return [];
 
                     let data = res.data;
                     let i = 0;
@@ -316,7 +250,7 @@ export class Video {
 
                                 i++;
 
-                                if(i >= total)
+                                if (i >= total)
                                     success(videos);
                             })
                             .catch(fail);
