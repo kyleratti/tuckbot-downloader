@@ -1,0 +1,30 @@
+{
+  "name": "a-mirror-util",
+  "version": "1.0.0",
+  "description": "Utility library for all a-mirror-related projects",
+  "main": "lib/index.js",
+  "types": "dts/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyleratti/a-mirror-util.git"
+  },
+  "author": "a.banana",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kyleratti/a-mirror-util/issues"
+  },
+  "homepage": "https://github.com/kyleratti/a-mirror-util#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "snoowrap": "^1.15.2"
+  },
+  "devDependencies": {
+    "@types/node": "^10.5.2",
+    "@types/snoowrap": "^1.16.0",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  }
+}

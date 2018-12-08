@@ -1,0 +1,16 @@
+proxy_cache_path /var/www/cache levels=1:2 keys_zone=cdncache:10m max_size=15g inactive=10080m use_temp_path=off;
+
+server {
+    listen 80;
+    server_name cdn.amirror.link;
+
+    location / {
+            proxy_ignore_headers Set-Cookie Cache-Control Expires;
+            proxy_hide_header Set-Cookie;
+            proxy_cache cdncache;
+            proxy_cache_valid 200 1d;
+            proxy_buffering on;
+            proxy_pass http://homeland.ratti.me;
+            proxy_set_header Host cdn.amirror.link;
+    }
+}

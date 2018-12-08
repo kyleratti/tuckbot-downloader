@@ -1,0 +1,62 @@
+body {
+    background-color: #333;
+    text-align: center;
+    color: lightsteelblue;
+}
+
+@media(max-width: 800px) {
+    body {
+        padding: 0.2em;
+    }
+}
+
+@media(min-width: 800px) {
+    body {
+        padding: 2em;
+    }
+}
+
+a {
+    color: lightcoral;
+}
+
+a:hover {
+    color: coral;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 800px;
+}
+
+video {
+    max-width: 800px;
+    max-height: 600px;
+    border: 2px solid #444;
+    padding: 2px;
+    background-color: #525252;
+}
+
+.love, .server {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+}
+
+footer {
+    color: rgb(176,196,222,0.7);
+    font-size: 0.7em;
+}
+
+footer a {
+    color: rgba(240,128,128, 0.7);
+}
+
+ul {
+    text-align: left;
+}
+
+small {
+    font-size: 0.5em;
+}

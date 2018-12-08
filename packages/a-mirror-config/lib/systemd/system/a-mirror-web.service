@@ -1,0 +1,16 @@
+[Unit]
+Description=a-mirror-web service
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/home/amirror/.env
+Restart=always
+RestartSec=1
+StartLimitIntervalSec=3
+User=amirror
+WorkingDirectory=/home/amirror/a-mirror-web/
+ExecStart=/usr/bin/env node lib/index.js
+
+[Install]
+WantedBy=multi-user.target

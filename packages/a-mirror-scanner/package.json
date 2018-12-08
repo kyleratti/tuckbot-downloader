@@ -1,0 +1,33 @@
+{
+  "name": "a-mirror-scanner",
+  "version": "1.0.0",
+  "description": "The content scanner behind a-mirror",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyleratti/a-mirror-scanner.git"
+  },
+  "author": "a.banana",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kyleratti/a-mirror-scanner/issues"
+  },
+  "homepage": "https://github.com/kyleratti/a-mirror-scanner#readme",
+  "dependencies": {
+    "a-mirror-util": "git+https://github.com/kyleratti/a-mirror-util.git",
+    "dotenv": "^6.0.0",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
+    "snoostorm": "0.0.5",
+    "snoowrap": "^1.15.2",
+    "ytdl-core": "^0.20.4"
+  },
+  "devDependencies": {
+    "@types/snoowrap": "^1.16.0",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  }
+}
