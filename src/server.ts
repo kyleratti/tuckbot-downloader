@@ -1,15 +1,10 @@
-import { MirrorRequestScanner, ReplyScanner } from './scanners';
+import { SubredditScanner } from "./scanners";
 
-export default class {
-    start() {
-        let mirrorReqScanner = new MirrorRequestScanner({
-            scanInterval: 1000 * 20
-        });
-        mirrorReqScanner.start();
-
-        let replyScanner = new ReplyScanner({
-            scanInterval: 1000 * 30
-        });
-        replyScanner.start();
-    }
+export class Server {
+  start() {
+    let subredditScanner = new SubredditScanner({
+      scanInterval: 1000 * 20
+    });
+    subredditScanner.start();
+  }
 }

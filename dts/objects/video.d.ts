@@ -49,7 +49,7 @@ export declare class Video {
      * Replies to the specified post with the specified message
      * @param message The message to respond with
      */
-    reply(message: string): Promise<import("snoowrap/dist/objects/ReplyableContent").default<Submission>>;
+    reply(message: string): Promise<import("../../../../../Documents/GitHub/a-mirror-downloader/node_modules/snoowrap/dist/objects/ReplyableContent").default<Submission>>;
     /**
      * Finds the video by specified id
      * @param redditPostId The unique reddit post id

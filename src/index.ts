@@ -1,4 +1,4 @@
-import Server from './server';
+import { Server } from "./server";
 
 let server = new Server();
 server.start();

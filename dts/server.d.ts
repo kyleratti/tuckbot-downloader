@@ -1,3 +1,3 @@
-export default class {
+export declare class Server {
     start(): void;
 }
