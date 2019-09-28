@@ -9,7 +9,8 @@ This part of the project polls participating subreddits for valid videos, downlo
 There's a few other pieces to Tuckbot.
 
 - [tuckbot-util](https://github.com/kyleratti/tuckbot-util/) - A few utility things that are standardized across tuckbot
-- [tuckbot-web](https://github.com/kyleratti/tuckbot-web/) - The public web-facing servers
+- [tuckbot-api](https://github.com/kyleratti/tuckbot-api/) - The backend API that tracks mirrored videos and view count
+- [tuckbot-frontend](https://github.com/kyleratti/tuckbot-web/) - The public frontend
 
 ## Retention Policy
 
@@ -23,9 +24,9 @@ I have no interest in personal data; **Tuckbot** collects only the data it needs
 - Date and time of submission
 - Last view date and time
 
-## Supported Sites
+## Supported Source Sites
 
-Basically anything supported by [youtube-dl](https://youtube-dl.org/) is supported.
+Basically anything supported by [youtube-dl](https://youtube-dl.org/) can be downloaded and mirrored.
 
 ## Active Subreddits
 
