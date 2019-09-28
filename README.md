@@ -10,7 +10,7 @@ There's a few other pieces to Tuckbot.
 
 - [tuckbot-util](https://github.com/kyleratti/tuckbot-util/) - A few utility things that are standardized across tuckbot
 - [tuckbot-api](https://github.com/kyleratti/tuckbot-api/) - The backend API that tracks mirrored videos and view count
-- [tuckbot-frontend](https://github.com/kyleratti/tuckbot-web/) - The public frontend
+- [tuckbot-frontend](https://github.com/kyleratti/tuckbot-frontend/) - The public frontend
 
 ## Retention Policy
 
