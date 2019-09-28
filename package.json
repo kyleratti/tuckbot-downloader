@@ -1,5 +1,5 @@
 {
-  "name": "a-mirror",
+  "name": "tuckbot-downloader",
   "version": "2.0.0",
   "description": "A mirror bot for reddit",
   "main": "lib/index.js",
@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kyleratti/a-mirror-downloader.git"
+    "url": "git+https://github.com/kyleratti/tuckbot-downloader.git"
   },
   "author": "kyleratti",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/kyleratti/a-mirror-downloader/issues"
+    "url": "https://github.com/kyleratti/tuckbot-downloader/issues"
   },
-  "homepage": "https://github.com/kyleratti/a-mirror-downloader.git#readme",
+  "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
-    "a-mirror-util": "git+https://github.com/kyleratti/a-mirror-util.git",
-    "aws-sdk": "^2.521.0",
+    "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
+    "aws-sdk": "^2.538.0",
     "dotenv": "^6.2.0",
     "fs": "0.0.1-security",
     "os": "^0.1.1",
@@ -33,6 +33,7 @@
     "snoostorm": "^0.0.5",
     "snoowrap": "^1.19.0",
     "sqlite3": "^4.1.0",
+    "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "util": "^0.11.1",
     "youtube-dl": "^2.0",
     "ytdl-core": "^0.20.4"
@@ -40,11 +41,11 @@
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
     "@types/fluent-ffmpeg": "^2.1.10",
-    "@types/multer": "^1.3.9",
+    "@types/multer": "^1.3.10",
     "@types/multer-s3": "^2.7.7",
-    "@types/node": "^8.10.53",
-    "@types/request-promise-native": "^1.0.16",
-    "@types/sequelize": "^4.28.4",
+    "@types/node": "^8.10.54",
+    "@types/request-promise-native": "^1.0.17",
+    "@types/sequelize": "^4.28.5",
     "@types/youtube-dl": "^1.12.2",
     "ts-node": "3.3.0",
     "typescript": "^2.9.2"
