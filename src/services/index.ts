@@ -1,1 +1,1 @@
-export * from "./TuckbotApi";
+export * from "./tuckbotapi";

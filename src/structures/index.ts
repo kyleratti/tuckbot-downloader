@@ -1,2 +1,2 @@
-export * from "./VideoDownloader";
-export * from "./TuckbotApi";
+export * from "./videodownloader";
+export * from "./tuckbotapi";
