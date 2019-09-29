@@ -10,8 +10,6 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "outDir": "../lib",
-    "declaration": true,
-    "declarationDir": "../dts",
     "sourceMap": true
   },
   "exclude": []

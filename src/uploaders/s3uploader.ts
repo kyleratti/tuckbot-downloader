@@ -1,6 +1,6 @@
-import { configurator } from "a-mirror-util";
 import aws from "aws-sdk";
 import * as fs from "fs";
+import { configurator } from "tuckbot-util";
 import { DownloadedVideo } from "../downloaders";
 
 let endpoint = new aws.Endpoint(configurator.storage.s3.endpoint);
@@ -15,8 +15,9 @@ export class S3Uploader {
     return s3
       .upload({
         Bucket: configurator.storage.s3.bucket,
-        Key: `key-${video.redditPostId}`,
-        Body: fs.readFileSync(video.location)
+        Key: `${video.redditPostId}.mp4`,
+        Body: fs.readFileSync(video.location),
+        ACL: "public-read"
       })
       .promise();
   }

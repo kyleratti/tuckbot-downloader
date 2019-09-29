@@ -26,17 +26,18 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "request-promise-native": "^1.0.7",
     "snoostorm": "^0.0.5",
     "snoowrap": "^1.19.0",
     "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "util": "^0.11.1",
-    "youtube-dl": "^2.0",
-    "ytdl-core": "^0.20.4"
+    "youtube-dl": "^2.0"
   },
   "devDependencies": {
     "@types/fluent-ffmpeg": "^2.1.10",
     "@types/node": "^8.10.54",
+    "@types/request": "^2.48.3",
+    "@types/request-promise": "^4.1.44",
     "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
     "ts-node": "3.3.0",
