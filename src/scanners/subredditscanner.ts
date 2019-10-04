@@ -66,10 +66,6 @@ export class SubredditScanner extends Scanner {
         if (post.is_self) return; // TODO: add logic to detect if a valid video link
 
         try {
-          if (post.url.startsWith("https://v.redd.it/"))
-            throw new Error(
-              "Detected reddit link; not equip to deal with that so it's being skipped"
-            );
           await this.processVideo(post);
         } catch (err) {
           console.error(`Unable to process video`); // FIXME: v.redd.it doesn't have mp4 available so this fails
