@@ -12,13 +12,9 @@ export class VideoDownloader {
 
     if (data.videoUrl == null) throw new Error("SOMEHOW videoUrl is null");
 
-    let downloader = youtubedl(
-      data.videoUrl,
-      ["-f=bestvideo+bestaudio/best", "--merge-output-format=mp4"],
-      {
-        cwd: configurator.file.processingDir
-      }
-    );
+    let downloader = youtubedl(data.videoUrl, ["--merge-output-format=mp4"], {
+      cwd: configurator.file.processingDir
+    });
 
     let targetPath = path.join(
       configurator.file.processingDir,
