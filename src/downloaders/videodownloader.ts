@@ -11,8 +11,6 @@ export class VideoDownloader {
       fs.mkdirSync(configurator.file.processingDir);
 
     if (data.videoUrl == null) throw new Error("SOMEHOW videoUrl is null");
-    console.log(`video url: ${data.videoUrl}`);
-    console.log(data);
 
     let downloader = youtubedl(
       data.videoUrl,
@@ -21,30 +19,28 @@ export class VideoDownloader {
         cwd: configurator.file.processingDir
       }
     );
-    console.log(downloader);
 
     let targetPath = path.join(
       configurator.file.processingDir,
       `${data.redditPostId}.mp4`
     );
 
-    downloader.pipe(fs.createWriteStream(targetPath));
-
     return new Promise<DownloadedVideo>((success, fail) => {
+      downloader.pipe(fs.createWriteStream(targetPath));
+
       downloader.on("end", () => {
         let downloadedVid = new DownloadedVideo({
           location: targetPath,
           redditPostId: data.redditPostId
         });
 
-        console.log(`successfully downloaded to ${downloadedVid.location}`);
         success(downloadedVid);
       });
 
       downloader.on("error", info => {
         if (fs.existsSync(`test/${data.redditPostId}.mp4`))
           fs.unlinkSync(`test/${data.redditPostId}.mp4`);
-        console.error(`error on download: ${info.filename}`);
+
         fail(info);
       });
     });

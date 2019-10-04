@@ -17,7 +17,7 @@ export class S3Uploader {
         Bucket: configurator.storage.s3.bucket,
         Key: `${video.redditPostId}.mp4`,
         Body: fs.readFileSync(video.location),
-        ACL: "public-read"
+        ACL: "private"
       })
       .promise();
   }

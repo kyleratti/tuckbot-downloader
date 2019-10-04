@@ -40,7 +40,6 @@
     "@types/request-promise": "^4.1.44",
     "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
-    "ts-node": "3.3.0",
     "typescript": "^3.6.2"
   }
 }

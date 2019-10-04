@@ -5,7 +5,7 @@ export interface ConfigOptions {
 
 export abstract class Scanner {
   /** The frequency (in ms) that the scanner should run */
-  private scanInterval;
+  private scanInterval: number;
 
   constructor(options: ConfigOptions) {
     this.scanInterval = options.scanInterval;

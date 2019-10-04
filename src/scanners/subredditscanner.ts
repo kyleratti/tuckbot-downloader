@@ -2,7 +2,7 @@ import snoostorm from "snoostorm";
 import { Submission } from "snoowrap";
 import { configurator, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
-import { TuckbotApi } from "../services";
+import { TuckbotApi, ACMApi } from "../services";
 import { S3Uploader } from "../uploaders";
 import { ConfigOptions, Scanner } from "./scanner";
 
@@ -20,17 +20,31 @@ export class SubredditScanner extends Scanner {
       videoUrl: post.url,
       redditPostId: post.id
     });
-    console.log(video);
 
-    let upload = await S3Uploader.upload(video);
-    console.log(upload);
+    console.log(`successfully fetched ${video.redditPostId}`);
 
-    let apiUpdate = await TuckbotApi.update({
+    await S3Uploader.upload(video);
+
+    console.log(`successfully uploaded ${video.redditPostId}`);
+
+    const mirrorUrl = `${configurator.tuckbot.frontend.cdnUrl}/${video.redditPostId}.mp4`;
+
+    await TuckbotApi.update({
       redditPostId: video.redditPostId,
       redditPostTitle: post.title,
-      mirrorUrl: `${configurator.tuckbot.frontend.cdnUrl}/${video.redditPostId}.mp4` // TODO: build URL
+      mirrorUrl: mirrorUrl
     });
-    console.log(apiUpdate);
+
+    console.log(`successfully updated tuckbot api ${video.redditPostId}`);
+
+    await ACMApi.update({
+      redditPostId: video.redditPostId,
+      url: mirrorUrl
+    });
+
+    console.log(`successfully updated acm api ${video.redditPostId}`);
+
+    video.cleanup();
   }
 
   start() {
@@ -52,6 +66,10 @@ export class SubredditScanner extends Scanner {
         if (post.is_self) return; // TODO: add logic to detect if a valid video link
 
         try {
+          if (post.url.startsWith("https://v.redd.it/"))
+            throw new Error(
+              "Detected reddit link; not equip to deal with that so it's being skipped"
+            );
           await this.processVideo(post);
         } catch (err) {
           console.error(`Unable to process video`); // FIXME: v.redd.it doesn't have mp4 available so this fails

@@ -1,5 +1,5 @@
-declare module 'snoostorm';
+declare module "snoostorm";
 
 declare class snoostorm {
-    SubmissionStream
+  SubmissionStream: any;
 }
