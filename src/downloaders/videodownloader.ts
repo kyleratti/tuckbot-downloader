@@ -28,8 +28,9 @@ export class VideoDownloader {
     let downloader = youtubedl(
       data.videoUrl,
       [
-        "--recode-video=mp4",
-        "--merge-output-format=mp4",
+        `-f "bestvideo+bestaudio/best"`,
+        `--recode-video=mp4`,
+        `--merge-output-format=mp4`,
         `--ffmpeg-location="${ffmpeg_bin.path}"`
       ],
       {
