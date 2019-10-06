@@ -2,7 +2,7 @@ import snoostorm from "snoostorm";
 import { Submission } from "snoowrap";
 import { configurator, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
-import { TuckbotApi, ACMApi } from "../services";
+import { ACMApi, TuckbotApi } from "../services";
 import { S3Uploader } from "../uploaders";
 import { ConfigOptions, Scanner } from "./scanner";
 
@@ -21,7 +21,7 @@ export class SubredditScanner extends Scanner {
       redditPostId: post.id
     });
 
-    console.log(`successfully fetched ${video.redditPostId}`);
+    console.log(`successfully fetched and converted ${video.redditPostId}`);
 
     await S3Uploader.upload(video);
 
@@ -44,7 +44,7 @@ export class SubredditScanner extends Scanner {
 
     console.log(`successfully updated acm api ${video.redditPostId}`);
 
-    video.cleanup();
+    VideoDownloader.cleanup(video.redditPostId);
   }
 
   start() {
@@ -68,8 +68,10 @@ export class SubredditScanner extends Scanner {
         try {
           await this.processVideo(post);
         } catch (err) {
-          console.error(`Unable to process video`); // FIXME: v.redd.it doesn't have mp4 available so this fails
+          console.error(`Unable to process video`);
           console.error(err);
+        } finally {
+          VideoDownloader.cleanup(post.id);
         }
       });
     });
