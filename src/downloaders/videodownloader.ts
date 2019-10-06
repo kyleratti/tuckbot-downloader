@@ -18,6 +18,7 @@ export class VideoDownloader {
 
     if (fs.existsSync(location)) fs.unlinkSync(location);
   }
+
   static async fetch(data: VideoDownloaderConfig) {
     if (!fs.existsSync(configurator.file.processingDir))
       fs.mkdirSync(configurator.file.processingDir);
@@ -27,7 +28,6 @@ export class VideoDownloader {
     let downloader = youtubedl(
       data.videoUrl,
       [
-        "-f=bestvideo+bestaudio/best",
         "--recode-video=mp4",
         "--merge-output-format=mp4",
         `--ffmpeg-location="${ffmpeg_bin.path}"`
