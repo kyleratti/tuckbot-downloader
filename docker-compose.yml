@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  downloader:
+    build:
+      context: .
+      dockerfile: build/downloader.Dockerfile
+    environment:
+      - "NODE_PATH=/app/node_modules/"
+      - "ENVIRONMENT=${ENVIRONMENT}"
+      - "PORT=${PORT}"
+      - "PROCESSING_DIR=${PROCESSING_DIR}"
+      - "REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}"
+      - "REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}"
+      - "REDDIT_USERNAME=${REDDIT_USERNAME}"
+      - "REDDIT_PASSWORD=${REDDIT_PASSWORD}"
+      - "REDDIT_USER_AGENT=${REDDIT_USER_AGENT}"
+      - "REDDIT_SCAN_SUBS=${REDDIT_SCAN_SUBS}"
+      - "STORAGE_S3_ENDPOINT=${STORAGE_S3_ENDPOINT}"
+      - "STORAGE_S3_ACCESS_KEY_ID=${STORAGE_S3_ACCESS_KEY_ID}"
+      - "STORAGE_S3_SECRET_ACCESS_KEY=${STORAGE_S3_SECRET_ACCESS_KEY}"
+      - "STORAGE_S3_BUCKET=${STORAGE_S3_BUCKET}"
+      - "TUCKBOT_API_URL=${TUCKBOT_API_URL}"
+      - "TUCKBOT_FRONTEND_CDNURL=${TUCKBOT_FRONTEND_CDNURL}"
+      - "TUCKBOT_FRONTEND_URL=${TUCKBOT_FRONTEND_URL}"
+      - "ACM_ENDPOINT=${ACM_ENDPOINT}"
+      - "ACM_API_TOKEN=${ACM_API_TOKEN}"
+      - "ACM_BOT_TOKEN=${ACM_BOT_TOKEN}"
+    restart: always
