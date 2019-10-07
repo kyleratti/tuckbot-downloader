@@ -47,7 +47,9 @@ export class VideoDownloader {
           `--merge-output-format`,
           `mp4`,
           `--ffmpeg-location`,
-          `${ffmpeg_bin.path}`
+          `${ffmpeg_bin.path}`,
+          `-o`,
+          `${data.redditPostId}.mp4`
         ],
         {
           cwd: configurator.file.processingDir
