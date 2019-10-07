@@ -27,3 +27,7 @@ services:
       - "ACM_API_TOKEN=${ACM_API_TOKEN}"
       - "ACM_BOT_TOKEN=${ACM_BOT_TOKEN}"
     restart: always
+    volumes:
+      - processing:/processing
+volumes:
+  processing:
