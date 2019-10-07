@@ -27,7 +27,6 @@ services:
       - "ACM_API_TOKEN=${ACM_API_TOKEN}"
       - "ACM_BOT_TOKEN=${ACM_BOT_TOKEN}"
     restart: always
-    volumes:
-      - processing:/processing
+    volumes: tuckbot-downloader-processing:/processing
 volumes:
-  processing:
+  tuckbot-downloader-processing:
