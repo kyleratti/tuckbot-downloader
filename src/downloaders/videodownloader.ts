@@ -23,47 +23,46 @@ export class VideoDownloader {
     if (!fs.existsSync(configurator.file.processingDir))
       fs.mkdirSync(configurator.file.processingDir);
 
-    if (data.videoUrl == null) throw new Error("SOMEHOW videoUrl is null");
-
-    let downloader = youtubedl(
-      data.videoUrl,
-      [
-        `-f`,
-        `bestvideo+bestaudio/best`,
-        `--recode-video`,
-        `mp4`,
-        `--merge-output-format`,
-        `mp4`,
-        `--ffmpeg-location`,
-        `${ffmpeg_bin.path}`
-      ],
-      {
-        cwd: configurator.file.processingDir
-      }
-    );
-
     let targetPath = path.join(
       configurator.file.processingDir,
       `${data.redditPostId}.mp4`
     );
 
     return new Promise<DownloadedVideo>((success, fail) => {
-      downloader.pipe(fs.createWriteStream(targetPath));
+      // I fought with this fucking thing for several hours and finally figured it out
+      // This bug actually plagued the project back in its first iteration, too, and I had no clue why
+      // I spent additional hours during this re-write trying to figure out why the hell random videos failed
+      // Eventually I stumbled upon this issue: https://github.com/przemyslawpluta/node-youtube-dl/issues/221
+      // In the event the issue disappears, I'll summarize: you need to use youtubedl.exec(...) instead of calling
+      // youtubedl(...) directly as some video sources have multiple streams. This breaks the event model. When
+      // you call exec(), all of the processing work is done by youtubedl - you just lose the fancy events and
+      // progress reporting.
+      youtubedl.exec(
+        data.videoUrl,
+        [
+          `-f`,
+          `bestvideo+bestaudio/best`,
+          `--recode-video`,
+          `mp4`,
+          `--merge-output-format`,
+          `mp4`,
+          `--ffmpeg-location`,
+          `${ffmpeg_bin.path}`
+        ],
+        {
+          cwd: configurator.file.processingDir
+        },
+        (err, _output) => {
+          if (err) return fail(err);
 
-      downloader.on("end", () => {
-        let downloadedVid = new DownloadedVideo({
-          location: targetPath,
-          redditPostId: data.redditPostId
-        });
-
-        success(downloadedVid);
-      });
-
-      downloader.on("error", info => {
-        if (fs.existsSync(targetPath)) fs.unlinkSync(targetPath);
-
-        fail(info);
-      });
+          return success(
+            new DownloadedVideo({
+              location: targetPath,
+              redditPostId: data.redditPostId
+            })
+          );
+        }
+      );
     });
   }
 
