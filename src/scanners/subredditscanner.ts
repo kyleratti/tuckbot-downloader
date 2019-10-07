@@ -28,11 +28,12 @@ export class SubredditScanner extends Scanner {
     console.log(`successfully uploaded ${video.redditPostId}`);
 
     const mirrorUrl = `${configurator.tuckbot.frontend.url}/${video.redditPostId}`;
+    const videoUrl = `${configurator.tuckbot.frontend.cdnUrl}/${video.redditPostId}.mp4`;
 
     await TuckbotApi.update({
       redditPostId: video.redditPostId,
       redditPostTitle: post.title,
-      mirrorUrl: mirrorUrl
+      mirrorUrl: videoUrl
     });
 
     console.log(`successfully updated tuckbot api ${video.redditPostId}`);
