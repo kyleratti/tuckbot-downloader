@@ -24,7 +24,7 @@ export class SubredditScanner extends Scanner {
     console.log(`successfully fetched ${video.redditPostId}`);
 
     video = await VideoDownloader.convert(video);
-    console.log(`sucecssfully converted ${video.redditPostId}`);
+    console.log(`successfully converted ${video.redditPostId}`);
 
     await S3Uploader.upload(video);
     console.log(`successfully uploaded ${video.redditPostId}`);
