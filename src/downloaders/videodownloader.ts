@@ -54,7 +54,7 @@ export class VideoDownloader {
         data.videoUrl,
         [
           `-f`,
-          `bestvideo+bestaudio/best`,
+          `best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best`,
           `--ffmpeg-location`,
           `${ffmpeg_bin.path}`,
           `-o`,
