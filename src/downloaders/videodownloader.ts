@@ -1,13 +1,12 @@
 import ffmpeg_bin from "ffmpeg-static";
-import Ffmpeg from "fluent-ffmpeg";
+import Ffmpeg, { FfmpegCommand } from "fluent-ffmpeg";
 import fs from "fs";
-import path, { resolve } from "path";
+import glob from "glob";
+import { resolve } from "path";
 import { configurator } from "tuckbot-util";
 import youtubedl from "youtube-dl";
 import { VideoDownloaderConfig } from "../structures";
 import { DownloadedVideo } from "./";
-
-Ffmpeg.setFfmpegPath(ffmpeg_bin.path);
 
 export class VideoDownloader {
   static cleanup(redditPostId: string) {
@@ -19,14 +18,28 @@ export class VideoDownloader {
     if (fs.existsSync(location)) fs.unlinkSync(location);
   }
 
+  private static locateVideo(redditPostId: string): string {
+    let files = glob.sync(
+      configurator.file.processingDir + `${redditPostId}.*`,
+      {}
+    );
+
+    if (!files || files.length <= 0)
+      throw new Error(
+        `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
+      );
+
+    if (files.length > 1)
+      throw new Error(
+        `Located ${files.length} files for "${redditPostId}.*" in "${configurator.file.processingDir}"`
+      );
+
+    return resolve(files[0]);
+  }
+
   static async fetch(data: VideoDownloaderConfig) {
     if (!fs.existsSync(configurator.file.processingDir))
       fs.mkdirSync(configurator.file.processingDir);
-
-    let targetPath = path.join(
-      configurator.file.processingDir,
-      `${data.redditPostId}.mp4`
-    );
 
     return new Promise<DownloadedVideo>((success, fail) => {
       // I fought with this fucking thing for several hours and finally figured it out
@@ -42,12 +55,10 @@ export class VideoDownloader {
         [
           `-f`,
           `bestvideo+bestaudio/best`,
-          `--merge-output-format`,
-          `mp4`,
           `--ffmpeg-location`,
           `${ffmpeg_bin.path}`,
           `-o`,
-          `${data.redditPostId}.mp4`
+          `${data.redditPostId}.%(ext)s`
         ],
         {
           cwd: configurator.file.processingDir
@@ -55,9 +66,11 @@ export class VideoDownloader {
         (err, _output) => {
           if (err) return fail(err);
 
+          let location = VideoDownloader.locateVideo(data.redditPostId);
+
           return success(
             new DownloadedVideo({
-              location: targetPath,
+              location: location,
               redditPostId: data.redditPostId
             })
           );
@@ -70,10 +83,43 @@ export class VideoDownloader {
     if (!fs.existsSync(ffmpeg_bin.path))
       throw new Error("ffmpeg.path not found; conversion not possible");
 
-    Ffmpeg(vid.location)
-      .videoCodec("libx264")
-      .audioCodec("libfaac")
-      .format("mp4")
-      .save(vid.location);
+    if (vid.location.endsWith(".mp4")) return vid;
+
+    const outputFormat = "mp4";
+    const newLocation = resolve(
+      configurator.file.processingDir,
+      `${vid.redditPostId}.${outputFormat}`
+    );
+
+    Ffmpeg.setFfmpegPath(ffmpeg_bin.path);
+
+    Ffmpeg.getAvailableEncoders((err, encoders) => {
+      console.log("getAvailableEncoders", encoders);
+    });
+
+    return new Promise<DownloadedVideo>((success, fail) => {
+      let command = Ffmpeg(vid.location);
+
+      console.log(new Date());
+      console.log(command);
+      command.audioCodec("aac");
+      command.videoCodec("libx264");
+      command.format(outputFormat);
+      command.save(newLocation);
+      command.on("error", err => {
+        fail(err);
+      });
+      command.on("end", () => {
+        console.log(`finished`);
+        console.log(new Date());
+
+        success(
+          new DownloadedVideo({
+            location: newLocation,
+            redditPostId: vid.redditPostId
+          })
+        );
+      });
+    });
   }
 }

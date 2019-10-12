@@ -3,6 +3,7 @@ import { Submission } from "snoowrap";
 import { configurator, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
 import { ACMApi, TuckbotApi } from "../services";
+import { ScannedPost } from "../structures";
 import { S3Uploader } from "../uploaders";
 import { ConfigOptions, Scanner } from "./scanner";
 
@@ -15,16 +16,17 @@ export class SubredditScanner extends Scanner {
     );
   }
 
-  private async processVideo(post: Submission) {
+  public static async processVideo(scannedPost: ScannedPost) {
     let video = await VideoDownloader.fetch({
-      videoUrl: post.url,
-      redditPostId: post.id
+      videoUrl: scannedPost.url,
+      redditPostId: scannedPost.redditPostId
     });
+    console.log(`successfully fetched ${video.redditPostId}`);
 
-    console.log(`successfully fetched and converted ${video.redditPostId}`);
+    video = await VideoDownloader.convert(video);
+    console.log(`sucecssfully converted ${video.redditPostId}`);
 
     await S3Uploader.upload(video);
-
     console.log(`successfully uploaded ${video.redditPostId}`);
 
     const mirrorUrl = `${configurator.tuckbot.frontend.url}/${video.redditPostId}`;
@@ -32,7 +34,7 @@ export class SubredditScanner extends Scanner {
 
     await TuckbotApi.update({
       redditPostId: video.redditPostId,
-      redditPostTitle: post.title,
+      redditPostTitle: scannedPost.title,
       mirrorUrl: videoUrl
     });
 
@@ -67,7 +69,11 @@ export class SubredditScanner extends Scanner {
         if (post.is_self) return; // TODO: add logic to detect if a valid video link
 
         try {
-          await this.processVideo(post);
+          await SubredditScanner.processVideo({
+            redditPostId: post.id,
+            title: post.title,
+            url: post.url
+          });
         } catch (err) {
           console.error(`Unable to process video`);
           console.error(err);
