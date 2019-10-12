@@ -1,5 +1,8 @@
 import { Server } from "./server";
 import { SubredditScanner } from "./scanners";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 if (
   process.env.NODE_ENV === "PRODUCTION" ||

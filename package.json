@@ -22,6 +22,7 @@
   "dependencies": {
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.538.0",
+    "dotenv": "^8.1.0",
     "ffmpeg-static": "^2.6.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
@@ -37,6 +38,7 @@
     "youtube-dl": "^2.0"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/ffmpeg-static": "^2.0.0",
     "@types/fluent-ffmpeg": "^2.1.11",
     "@types/glob": "^7.1.1",
