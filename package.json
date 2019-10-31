@@ -21,32 +21,32 @@
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "aws-sdk": "^2.538.0",
-    "dotenv": "^8.1.0",
-    "ffmpeg-static": "^2.6.0",
+    "aws-sdk": "^2.560.0",
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^2.7.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
-    "glob": "^7.1.4",
+    "glob": "^7.1.5",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "request-promise-native": "^1.0.7",
     "snoostorm": "^0.0.5",
-    "snoowrap": "^1.19.0",
+    "snoowrap": "^1.20.0",
     "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "youtube-dl": "^2.0"
+    "youtube-dl": "^2.1.0"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/ffmpeg-static": "^2.0.0",
     "@types/fluent-ffmpeg": "^2.1.11",
     "@types/glob": "^7.1.1",
-    "@types/node": "^8.10.54",
+    "@types/node": "^8.10.58",
     "@types/request": "^2.48.3",
     "@types/request-promise": "^4.1.44",
     "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.4"
   }
 }

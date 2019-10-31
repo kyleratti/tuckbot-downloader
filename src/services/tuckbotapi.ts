@@ -8,7 +8,7 @@ export class TuckbotApi {
       uri: `${configurator.tuckbot.api.url}/private/video`,
       method: "POST",
       headers: {
-        // TODO: auth headers
+        "X-Tuckbot-API-Token": configurator.tuckbot.api.token
       },
       body: data,
       json: true
