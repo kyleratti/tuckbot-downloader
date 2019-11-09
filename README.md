@@ -4,7 +4,7 @@
 
 This reddit bot will attempt to mirror linked video posts from supported services and post a link to them. It's named after my dog, Tucker.
 
-This part of the project polls participating subreddits for valid videos, downloads them, converts them (if necessary), uploads them to secondary storage, and then sends the public link to my other project, [a-centralized-mirror](https://github.com/kyleratti/a-centralized-mirror), to be posted in the comments.
+This part of the project polls participating subreddits for valid videos, downloads them, ~~converts them (if necessary)~~, uploads them to secondary storage, and then sends the public link to my other project, [a-centralized-mirror](https://github.com/kyleratti/a-centralized-mirror), to be posted in the comments.
 
 There's a few other pieces to Tuckbot.
 
