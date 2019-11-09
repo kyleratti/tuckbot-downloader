@@ -1,3 +1,5 @@
+import { Submission } from "snoowrap";
+import { snooman } from "tuckbot-util";
 import { S3, TuckbotApi } from "../services";
 import { Scanner } from "./scanner";
 
