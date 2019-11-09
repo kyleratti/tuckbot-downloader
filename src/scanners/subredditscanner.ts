@@ -3,8 +3,8 @@ import { Submission } from "snoowrap";
 import { configurator, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
 import { ACMApi, TuckbotApi } from "../services";
+import { S3 } from "../services/s3";
 import { ScannedPost } from "../structures";
-import { S3Uploader } from "../uploaders";
 import { ConfigOptions, Scanner } from "./scanner";
 
 export class SubredditScanner extends Scanner {
@@ -23,7 +23,7 @@ export class SubredditScanner extends Scanner {
     });
     console.log(`successfully fetched ${video.redditPostId}`);
 
-    await S3Uploader.upload(video);
+    await S3.upload(video);
     console.log(`successfully uploaded ${video.redditPostId}`);
 
     const mirrorUrl = `${configurator.tuckbot.frontend.url}/${video.redditPostId}`;
