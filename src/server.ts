@@ -1,4 +1,4 @@
-import { SubredditScanner } from "./scanners";
+import { DeadContentScanner, SubredditScanner } from "./scanners";
 
 export class Server {
   start() {
@@ -6,5 +6,10 @@ export class Server {
       scanInterval: 1000 * 20
     });
     subredditScanner.start();
+
+    let deadcontentScanner = new DeadContentScanner({
+      scanInterval: 1000 * 60 * 5
+    });
+    deadcontentScanner.start();
   }
 }
