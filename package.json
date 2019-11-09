@@ -47,6 +47,6 @@
     "@types/request-promise": "^4.1.44",
     "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
-    "typescript": "^3.7.2"
+    "typescript": "^3.6.3"
   }
 }
