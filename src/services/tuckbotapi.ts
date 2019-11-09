@@ -45,7 +45,7 @@ export class TuckbotApi {
 
   static async fetchStale(): Promise<FetchStaleVideosResponse> {
     return request({
-      uri: `${configurator.tuckbot.api.url}/private/video/stale`,
+      uri: `${configurator.tuckbot.api.url}/private/video/stalevideos`,
       method: "GET",
       headers: {
         "X-Tuckbot-API-Token": configurator.tuckbot.api.token
