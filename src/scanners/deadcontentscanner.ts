@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Submission } from "snoowrap";
 import { snooman } from "tuckbot-util";
 import { S3, TuckbotApi } from "../services";
@@ -15,18 +16,37 @@ export class DeadContentScanner extends Scanner {
 
       console.debug(`Found ${videosToPrune.length} video(s)`);
 
+      let shouldRemove = false;
+      const removalDate = moment().subtract(30, "days");
+
+      console.debug(`Cut-off for stale content is ${removalDate.toString()}`);
+
       videosToPrune.forEach(async vid => {
+        shouldRemove = false;
+
         // @ts-ignore
         // FIXME: due to an issue with snoowrap typings, the 'await' keyword causes compile errors. see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33139
         let submission: Submission = await snooman.wrap
           .getSubmission(vid.redditPostId)
           .fetch();
 
-        if (submission.removal_reason != null) {
-          // This is the only way I have found to detect whether or not a submission was removed
-          console.log(`'${submission.id}' now removed`);
+        let lastViewed = moment(vid.lastViewedAt);
+
+        if (!submission) shouldRemove = true;
+        else {
+          if (submission.removal_reason != null) {
+            // This is the only way I have found to detect whether or not a submission was removed
+            console.log(`'${submission.id}' now removed`);
+            shouldRemove = true;
+          } else if (lastViewed.isBefore(removalDate)) {
+            console.log(`${submission.id} last viewed > 30 days ago; removing`);
+            shouldRemove = true;
+          }
+        }
+
+        if (shouldRemove) {
           await TuckbotApi.remove(vid);
-          console.log(`sent tuckbot api req`);
+          console.log(`sent tuckbot api req to remove ${vid.id}`);
           S3.remove(vid);
         } else {
           await TuckbotApi.prune(vid);
