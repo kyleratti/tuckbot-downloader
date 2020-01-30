@@ -21,7 +21,7 @@
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "aws-sdk": "^2.568.0",
+    "aws-sdk": "^2.610.0",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^2.7.0",
     "fluent-ffmpeg": "^2.1.2",
@@ -40,13 +40,13 @@
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/ffmpeg-static": "^2.0.0",
-    "@types/fluent-ffmpeg": "^2.1.11",
+    "@types/fluent-ffmpeg": "^2.1.13",
     "@types/glob": "^7.1.1",
     "@types/node": "^8.10.59",
-    "@types/request": "^2.48.3",
-    "@types/request-promise": "^4.1.44",
+    "@types/request": "^2.48.4",
+    "@types/request-promise": "^4.1.45",
     "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
-    "typescript": "~3.6.3"
+    "typescript": "^3.6.5"
   }
 }
