@@ -46,7 +46,7 @@ export class DeadContentScanner extends Scanner {
 
         if (shouldRemove) {
           await TuckbotApi.remove(vid);
-          console.log(`sent tuckbot api req to remove ${vid.id}`);
+          console.log(`sent tuckbot api req to remove ${vid.redditPostId}`);
           S3.remove(vid);
         } else {
           await TuckbotApi.prune(vid);
