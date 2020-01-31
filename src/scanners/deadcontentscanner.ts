@@ -45,9 +45,14 @@ export class DeadContentScanner extends Scanner {
         }
 
         if (shouldRemove) {
-          await TuckbotApi.remove(vid);
-          console.log(`sent tuckbot api req to remove ${vid.redditPostId}`);
-          S3.remove(vid);
+          try {
+            await TuckbotApi.remove(vid);
+            console.log(`sent tuckbot api req to remove ${vid.redditPostId}`);
+            await S3.remove(vid);
+            console.log(`removed s3 object for ${vid.redditPostId}`);
+          } catch (e) {
+            console.error(`error removing ${vid.redditPostId}: ${e}`);
+          }
         } else {
           await TuckbotApi.prune(vid);
         }
