@@ -36,7 +36,7 @@ export class DeadContentScanner extends Scanner {
         else {
           if (submission.removal_reason != null) {
             // This is the only way I have found to detect whether or not a submission was removed
-            console.log(`'${submission.id}' now removed`);
+            console.log(`'${submission.id}' now removed from reddit`);
             shouldRemove = true;
           } else if (lastViewed.isBefore(removalDate)) {
             console.log(`${submission.id} last viewed > 20 days ago; removing`);
