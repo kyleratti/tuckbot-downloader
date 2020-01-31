@@ -17,7 +17,7 @@ export class DeadContentScanner extends Scanner {
       console.debug(`Found ${videosToPrune.length} video(s)`);
 
       let shouldRemove = false;
-      const removalDate = moment().subtract(30, "days");
+      const removalDate = moment().subtract(20, "days");
 
       console.debug(`Cut-off for stale content is ${removalDate.toString()}`);
 
@@ -39,7 +39,7 @@ export class DeadContentScanner extends Scanner {
             console.log(`'${submission.id}' now removed`);
             shouldRemove = true;
           } else if (lastViewed.isBefore(removalDate)) {
-            console.log(`${submission.id} last viewed > 30 days ago; removing`);
+            console.log(`${submission.id} last viewed > 20 days ago; removing`);
             shouldRemove = true;
           }
         }
