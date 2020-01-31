@@ -12,10 +12,12 @@ const s3 = new aws.S3({
 
 export class S3 {
   static remove(video: MirroredVideo) {
-    return s3.deleteObject({
-      Bucket: configurator.storage.s3.bucket,
-      Key: `${video.redditPostId}.mp4` // TODO: actually get the file name instead of assuming .mp4
-    });
+    return s3
+      .deleteObject({
+        Bucket: configurator.storage.s3.bucket,
+        Key: `${video.redditPostId}.mp4` // TODO: actually get the file name instead of assuming .mp4
+      })
+      .promise();
   }
 
   static upload(video: DownloadedVideo) {
