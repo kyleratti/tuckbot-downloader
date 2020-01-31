@@ -23,7 +23,7 @@
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.610.0",
     "dotenv": "^8.2.0",
-    "ffmpeg-static": "^2.7.0",
+    "ffmpeg-static": "^4.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
     "glob": "^7.1.6",
