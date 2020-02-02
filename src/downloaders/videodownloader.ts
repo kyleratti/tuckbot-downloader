@@ -58,7 +58,9 @@ export class VideoDownloader {
           `--ffmpeg-location`,
           `${ffmpeg_bin.path}`,
           `-o`,
-          `${data.redditPostId}.%(ext)s`
+          `${data.redditPostId}.%(ext)s`,
+          `--recode-video`,
+          `mp4`
         ],
         {
           cwd: configurator.file.processingDir
