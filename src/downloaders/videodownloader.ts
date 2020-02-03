@@ -71,8 +71,8 @@ export class VideoDownloader {
     return new Promise<DownloadedVideo>((success, fail) => {
       /*
        * I fought with this fucking thing for several hours and finally figured it out
-       * This bug actually plagued the project back in its first iteration, too, and I had no clue why
-       * I spent additional hours during this re-write trying to figure out why the hell random videos failed
+       * This bug actually plagued the project back in its first iteration, too, and I had no clue why.
+       * I spent additional hours during this re-write trying to figure out why the hell random videos failed.
        * Eventually I stumbled upon this issue: https://github.com/przemyslawpluta/node-youtube-dl/issues/221
        * In the event the issue disappears, I'll summarize: you need to use youtubedl.exec(...) instead of calling
        * youtubedl(...) directly as some video sources have multiple streams. This breaks the event model. When
