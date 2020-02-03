@@ -1,13 +1,13 @@
 import ffmpeg_bin from "ffmpeg-static";
-import Ffmpeg, { FfmpegCommand } from "fluent-ffmpeg";
+import Ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import glob from "glob";
+import * as path from "path";
 import { resolve } from "path";
 import { configurator } from "tuckbot-util";
 import youtubedl from "youtube-dl";
 import { VideoDownloaderConfig } from "../structures";
 import { DownloadedVideo } from "./";
-import * as path from "path";
 
 export class VideoDownloader {
   private static getFiles(redditPostId: string) {
