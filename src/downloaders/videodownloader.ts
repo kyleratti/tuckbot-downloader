@@ -7,36 +7,53 @@ import { configurator } from "tuckbot-util";
 import youtubedl from "youtube-dl";
 import { VideoDownloaderConfig } from "../structures";
 import { DownloadedVideo } from "./";
+import * as path from "path";
 
 export class VideoDownloader {
-  static cleanup(redditPostId: string) {
-    let location = resolve(
-      configurator.file.processingDir,
-      `${redditPostId}.mp4`
-    );
+  private static getFiles(redditPostId: string) {
+    return glob.sync(configurator.file.processingDir + `${redditPostId}.*`, {});
+  }
 
-    if (fs.existsSync(location)) fs.unlinkSync(location);
+  static cleanup(redditPostId: string) {
+    let files = this.getFiles(redditPostId);
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      fs.unlinkSync(file);
+    }
   }
 
   private static locateVideo(redditPostId: string): string {
-    let files = glob.sync(
-      configurator.file.processingDir + `${redditPostId}.*`,
-      {}
-    );
+    let files = this.getFiles(redditPostId);
 
     if (!files || files.length <= 0)
       throw new Error(
         `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
       );
 
-    if (files.length > 1)
-      throw new Error(
-        `Located ${files.length} files for "${redditPostId}.*" in "${
-          configurator.file.processingDir
-        }": ${files.toString()}`
-      );
+    let targetFile = files[0];
 
-    return resolve(files[0]);
+    /*
+     * Originally, I was detecting if multiple files existed
+     * If this was successful, there should only be one
+     * However, youtube-dl's exec() function appears to run the callback
+     * before youtube-dl finishes cleaning up the extra files. Instead,
+     * we have to check for the existance of the .mp4 file. It's not as
+     * clean as I'd like, but hey, if it works, it works.
+     */
+    if (files.length > 1)
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (
+          file ===
+          path.join(configurator.file.processingDir, `${redditPostId}.mp4`)
+        ) {
+          targetFile = file;
+          break;
+        }
+      }
+
+    return resolve(targetFile);
   }
 
   static async fetch(data: VideoDownloaderConfig) {
@@ -44,14 +61,16 @@ export class VideoDownloader {
       fs.mkdirSync(configurator.file.processingDir);
 
     return new Promise<DownloadedVideo>((success, fail) => {
-      // I fought with this fucking thing for several hours and finally figured it out
-      // This bug actually plagued the project back in its first iteration, too, and I had no clue why
-      // I spent additional hours during this re-write trying to figure out why the hell random videos failed
-      // Eventually I stumbled upon this issue: https://github.com/przemyslawpluta/node-youtube-dl/issues/221
-      // In the event the issue disappears, I'll summarize: you need to use youtubedl.exec(...) instead of calling
-      // youtubedl(...) directly as some video sources have multiple streams. This breaks the event model. When
-      // you call exec(), all of the processing work is done by youtubedl - you just lose the fancy events and
-      // progress reporting.
+      /*
+       * I fought with this fucking thing for several hours and finally figured it out
+       * This bug actually plagued the project back in its first iteration, too, and I had no clue why
+       * I spent additional hours during this re-write trying to figure out why the hell random videos failed
+       * Eventually I stumbled upon this issue: https://github.com/przemyslawpluta/node-youtube-dl/issues/221
+       * In the event the issue disappears, I'll summarize: you need to use youtubedl.exec(...) instead of calling
+       * youtubedl(...) directly as some video sources have multiple streams. This breaks the event model. When
+       * you call exec(), all of the processing work is done by youtubedl - you just lose the fancy events and
+       * progress reporting.
+       */
       youtubedl.exec(
         data.videoUrl,
         [
