@@ -14,6 +14,10 @@ export class VideoDownloader {
     return glob.sync(configurator.file.processingDir + `${redditPostId}.*`, {});
   }
 
+  /**
+   * Cleans up any left over files relating to the attempted download of the specified reddit post ID
+   * @param redditPostId The reddit post ID to look for dangling files
+   */
   static cleanup(redditPostId: string) {
     let files = this.getFiles(redditPostId);
 
@@ -23,7 +27,7 @@ export class VideoDownloader {
     }
   }
 
-  private static locateVideo(redditPostId: string): string {
+  private static findVideoPath(redditPostId: string): string {
     let files = this.getFiles(redditPostId);
 
     if (!files || files.length <= 0)
@@ -56,6 +60,10 @@ export class VideoDownloader {
     return resolve(targetFile);
   }
 
+  /**
+   * Creates a promise to fetch the specified video for the specified reddit post
+   * @param data The data structure to process
+   */
   static async fetch(data: VideoDownloaderConfig) {
     if (!fs.existsSync(configurator.file.processingDir))
       fs.mkdirSync(configurator.file.processingDir);
@@ -89,7 +97,7 @@ export class VideoDownloader {
         (err, _output) => {
           if (err) return fail(err);
 
-          let location = VideoDownloader.locateVideo(data.redditPostId);
+          let location = VideoDownloader.findVideoPath(data.redditPostId);
 
           return success(
             new DownloadedVideo({
