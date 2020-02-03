@@ -31,7 +31,9 @@ export class VideoDownloader {
 
     if (files.length > 1)
       throw new Error(
-        `Located ${files.length} files for "${redditPostId}.*" in "${configurator.file.processingDir}"`
+        `Located ${files.length} files for "${redditPostId}.*" in "${
+          configurator.file.processingDir
+        }": ${files.toString()}`
       );
 
     return resolve(files[0]);
