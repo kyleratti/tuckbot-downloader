@@ -57,7 +57,7 @@ export class VideoDownloader {
         }
       }
 
-    return resolve(targetFile);
+    return targetFile ? resolve(targetFile) : null;
   }
 
   /**
