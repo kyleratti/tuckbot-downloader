@@ -27,7 +27,7 @@ export class VideoDownloader {
     }
   }
 
-  private static findVideoPath(redditPostId: string): string {
+  private static findVideoPath(redditPostId: string): string | null {
     let files = this.getFiles(redditPostId);
 
     if (!files || files.length <= 0)
@@ -35,7 +35,7 @@ export class VideoDownloader {
         `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
       );
 
-    let targetFile = files[0];
+    let targetFile = null;
 
     /*
      * Originally, I was detecting if multiple files existed
@@ -98,6 +98,9 @@ export class VideoDownloader {
           if (err) return fail(err);
 
           let location = VideoDownloader.findVideoPath(data.redditPostId);
+
+          if (!location)
+            throw new Error(`.mp4 for ${data.redditPostId} not found`);
 
           return success(
             new DownloadedVideo({
