@@ -24,7 +24,7 @@ export class S3 {
     return s3
       .upload({
         Bucket: configurator.storage.s3.bucket,
-        Key: video.location, // TODO: actually get the file name instead of assuming .mp4
+        Key: `${video.redditPostId}.mp4`, // TODO: actually get the file name instead of assuming .mp4
         Body: fs.readFileSync(video.location),
         ACL: "public-read"
       })
