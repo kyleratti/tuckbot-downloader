@@ -32,34 +32,12 @@ export class VideoDownloader {
   private static findVideoPath(redditPostId: string): string {
     let files = this.getFiles(redditPostId);
 
-    if (!files || files.length <= 0)
+    if (!files || files.length != 0)
       throw new Error(
         `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
       );
 
-    let targetFile = files[0];
-
-    /*
-     * Originally, I was detecting if multiple files existed
-     * If this was successful, there should only be one
-     * However, youtube-dl's exec() function appears to run the callback
-     * before youtube-dl finishes cleaning up the extra files. Instead,
-     * we have to check for the existance of the .mp4 file. It's not as
-     * clean as I'd like, but hey, if it works, it works.
-     */
-    if (files.length > 1)
-      for (let i = 1; i < files.length; i++) {
-        const file = files[i];
-        if (
-          file ===
-          path.join(configurator.file.processingDir, `${redditPostId}.mp4`)
-        ) {
-          targetFile = file;
-          break;
-        }
-      }
-
-    return resolve(targetFile);
+    return resolve(`${configurator.file.processingDir}/${files[0]}`);
   }
 
   /**
