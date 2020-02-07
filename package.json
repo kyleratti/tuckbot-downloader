@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/dotenv": "^6.1.1",
-    "@types/ffmpeg-static": "^2.0.0",
+    "@types/ffmpeg-static": "^3.0.0",
     "@types/fluent-ffmpeg": "^2.1.13",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.1",
