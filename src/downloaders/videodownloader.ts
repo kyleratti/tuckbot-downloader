@@ -1,4 +1,4 @@
-import ffmpeg_bin from "ffmpeg-static";
+import ffmpeg_bin = require("ffmpeg-static");
 import Ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import glob from "glob";
@@ -11,7 +11,9 @@ import { DownloadedVideo } from "./";
 
 export class VideoDownloader {
   private static getFiles(redditPostId: string) {
-    return glob.sync(configurator.file.processingDir + `${redditPostId}.*`, {});
+    return glob.sync(`${redditPostId}.*`, {
+      cwd: configurator.file.processingDir
+    });
   }
 
   /**
@@ -85,7 +87,7 @@ export class VideoDownloader {
           `-f`,
           `best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best`,
           `--ffmpeg-location`,
-          `${ffmpeg_bin.path}`,
+          `${ffmpeg_bin}`,
           `-o`,
           `${data.redditPostId}.%(ext)s`,
           `--merge-output-format`,
@@ -111,7 +113,7 @@ export class VideoDownloader {
   }
 
   static async convert(vid: DownloadedVideo) {
-    if (!fs.existsSync(ffmpeg_bin.path))
+    if (!fs.existsSync(ffmpeg_bin))
       throw new Error("ffmpeg.path not found; conversion not possible");
 
     if (vid.location.endsWith(".mp4")) return vid;
@@ -122,7 +124,7 @@ export class VideoDownloader {
       `${vid.redditPostId}.${outputFormat}`
     );
 
-    Ffmpeg.setFfmpegPath(ffmpeg_bin.path);
+    Ffmpeg.setFfmpegPath(ffmpeg_bin);
 
     Ffmpeg.getAvailableEncoders((err, encoders) => {
       console.log("getAvailableEncoders", encoders);
