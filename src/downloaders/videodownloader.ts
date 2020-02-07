@@ -27,7 +27,7 @@ export class VideoDownloader {
     }
   }
 
-  private static findVideoPath(redditPostId: string): string | null {
+  private static findVideoPath(redditPostId: string): string {
     let files = this.getFiles(redditPostId);
 
     if (!files || files.length <= 0)
@@ -35,7 +35,7 @@ export class VideoDownloader {
         `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
       );
 
-    let targetFile = null;
+    let targetFile = files[0];
 
     /*
      * Originally, I was detecting if multiple files existed
@@ -46,7 +46,7 @@ export class VideoDownloader {
      * clean as I'd like, but hey, if it works, it works.
      */
     if (files.length > 1)
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 1; i < files.length; i++) {
         const file = files[i];
         if (
           file ===
@@ -57,7 +57,7 @@ export class VideoDownloader {
         }
       }
 
-    return targetFile ? resolve(targetFile) : null;
+    return resolve(targetFile);
   }
 
   /**
@@ -88,7 +88,7 @@ export class VideoDownloader {
           `${ffmpeg_bin.path}`,
           `-o`,
           `${data.redditPostId}.%(ext)s`,
-          `--recode-video`,
+          `--merge-output-format`,
           `mp4`
         ],
         {
@@ -98,9 +98,6 @@ export class VideoDownloader {
           if (err) return fail(err);
 
           let location = VideoDownloader.findVideoPath(data.redditPostId);
-
-          if (!location)
-            throw new Error(`.mp4 for ${data.redditPostId} not found`);
 
           return success(
             new DownloadedVideo({
