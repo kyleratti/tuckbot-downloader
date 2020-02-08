@@ -32,9 +32,14 @@ export class VideoDownloader {
   private static findVideoPath(redditPostId: string): string {
     let files = this.getFiles(redditPostId);
 
-    if (!files || files.length != 0)
+    if (!files || files.length === 0)
       throw new Error(
         `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
+      );
+
+    if (files.length !== 1)
+      throw new Error(
+        `Located ${files.length} files matching "${configurator.file.processingDir}/${redditPostId}.*"`
       );
 
     return resolve(`${configurator.file.processingDir}/${files[0]}`);
