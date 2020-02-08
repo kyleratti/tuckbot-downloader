@@ -24,7 +24,7 @@ export class VideoDownloader {
     let files = this.getFiles(redditPostId);
 
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+      const file = `${configurator.file.processingDir}/${files[i]}`;
       fs.unlinkSync(file);
     }
   }
