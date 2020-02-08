@@ -1,10 +1,13 @@
 import { expect } from "chai";
+import * as dotenv from "dotenv";
 import ffmpeg_bin from "ffmpeg-static";
 import fs from "fs";
 import "mocha";
 import { configurator } from "tuckbot-util";
 import { DownloadedVideo } from "../../downloaders/downloadedvideo";
 import { VideoDownloader } from "../../downloaders/videodownloader";
+
+dotenv.config();
 
 describe("ffmpeg installed?", () => {
   it("should be a valid path", () => {
@@ -18,8 +21,10 @@ describe("ffmpeg installed?", () => {
 
 describe("v.redd.it video download", () => {
   it("should have a non-null processing dir", () => {
-    console.log(`processingDir: ${configurator.file.processingDir}`);
-    return expect(configurator.file.processingDir).to.not.null;
+    const result = configurator.file.processingDir;
+
+    console.log(`processingDir: ${result}`);
+    return expect(result).to.not.null;
   });
 
   it("should download a .mp4 file", async () => {
