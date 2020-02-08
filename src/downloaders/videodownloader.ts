@@ -2,7 +2,6 @@ import ffmpeg_bin = require("ffmpeg-static");
 import Ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import glob from "glob";
-import path from "path";
 import { resolve } from "path";
 import { configurator } from "tuckbot-util";
 import youtubedl from "youtube-dl";
