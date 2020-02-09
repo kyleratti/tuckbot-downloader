@@ -13,6 +13,7 @@ RUN npm run test
 FROM node:10-alpine AS app-runtime
 RUN apk add python
 RUN mkdir /app
+COPY --from=ffmpeg-bin / /
 COPY --from=app-build /app-src/node_modules/ /app/node_modules/
 COPY --from=app-build /app-src/lib/ /app/lib/
 
