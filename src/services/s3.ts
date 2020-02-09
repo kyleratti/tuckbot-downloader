@@ -1,6 +1,6 @@
 import * as aws from "aws-sdk";
 import * as fs from "fs";
-import { configurator, MirroredVideo } from "tuckbot-util";
+import { configurator, MirroredVideo, StaleVideo } from "tuckbot-util";
 import { DownloadedVideo } from "../downloaders";
 
 const endpoint = new aws.Endpoint(configurator.storage.s3.endpoint);
@@ -11,7 +11,7 @@ const s3 = new aws.S3({
 });
 
 export class S3 {
-  static remove(video: MirroredVideo) {
+  static remove(video: MirroredVideo | StaleVideo) {
     return s3
       .deleteObject({
         Bucket: configurator.storage.s3.bucket,

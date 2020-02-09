@@ -12,7 +12,7 @@ export class DeadContentScanner extends Scanner {
 
     const doCheck = async () => {
       console.log(`Checking for stale content`);
-      let videosToPrune = (await TuckbotApi.fetchStale()).data.mirroredVideos;
+      let videosToPrune = (await TuckbotApi.fetchStale()).data.staleVideos;
 
       console.debug(`Found ${videosToPrune.length} video(s)`);
 

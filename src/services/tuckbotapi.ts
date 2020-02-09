@@ -5,6 +5,7 @@ import {
   MirroredVideo,
   PruneVideoResponse,
   RemoveVideoResponse,
+  StaleVideo,
   VideoUpdateRequestOptions
 } from "tuckbot-util";
 
@@ -21,7 +22,9 @@ export class TuckbotApi {
     });
   }
 
-  static async prune(vid: MirroredVideo): Promise<PruneVideoResponse> {
+  static async prune(
+    vid: MirroredVideo | StaleVideo
+  ): Promise<PruneVideoResponse> {
     return request({
       uri: `${configurator.tuckbot.api.url}/private/video/prune/${vid.redditPostId}`,
       method: "POST",
@@ -32,7 +35,9 @@ export class TuckbotApi {
     });
   }
 
-  static async remove(vid: MirroredVideo): Promise<RemoveVideoResponse> {
+  static async remove(
+    vid: MirroredVideo | StaleVideo
+  ): Promise<RemoveVideoResponse> {
     return request({
       uri: `${configurator.tuckbot.api.url}/private/video/${vid.redditPostId}`,
       method: "DELETE",
