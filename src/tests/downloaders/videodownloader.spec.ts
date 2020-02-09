@@ -6,7 +6,9 @@ import { configurator } from "tuckbot-util";
 import { DownloadedVideo } from "../../downloaders/downloadedvideo";
 import { VideoDownloader } from "../../downloaders/videodownloader";
 
-dotenv.config();
+dotenv.config({
+  debug: true
+});
 
 describe("ffmpeg installed?", () => {
   it("should be a valid path", () => {
