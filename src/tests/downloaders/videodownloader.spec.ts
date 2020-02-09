@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import * as dotenv from "dotenv";
-import ffmpeg_bin from "ffmpeg-static";
 import fs from "fs";
 import "mocha";
 import { configurator } from "tuckbot-util";
@@ -11,7 +10,7 @@ dotenv.config();
 
 describe("ffmpeg installed?", () => {
   it("should be a valid path", () => {
-    const result = ffmpeg_bin;
+    const result = configurator.ffmpeg.location;
 
     console.log(`ffmpeg_bin.path: ${result}`);
 

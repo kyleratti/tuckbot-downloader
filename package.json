@@ -24,7 +24,6 @@
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.614.0",
     "dotenv": "^8.2.0",
-    "ffmpeg-static": "^4.0.1",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
     "glob": "^7.1.6",
@@ -42,7 +41,6 @@
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/dotenv": "^6.1.1",
-    "@types/ffmpeg-static": "^3.0.0",
     "@types/fluent-ffmpeg": "^2.1.14",
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.1",
