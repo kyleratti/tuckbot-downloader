@@ -8,6 +8,7 @@ services:
     environment:
       - "NODE_PATH=/app/node_modules/"
       - "ENVIRONMENT=${ENVIRONMENT}"
+      - "FFMPEG_LOCATION=${FFMPEG_LOCATION}"
       - "PORT=${PORT}"
       - "PROCESSING_DIR=${PROCESSING_DIR}"
       - "REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}"
