@@ -72,8 +72,7 @@ export class VideoDownloader {
           `-o`,
           `${data.redditPostId}.%(ext)s`,
           `--merge-output-format`,
-          `mp4`,
-          `--hls-prefer-ffmpeg`
+          `mp4`
         ],
         {
           cwd: configurator.file.processingDir
