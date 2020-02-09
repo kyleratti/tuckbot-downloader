@@ -8,7 +8,7 @@
     "build": "tsc -p src",
     "watch": "tsc -p src -w",
     "prepublishOnly": "npm run build",
-    "test": "TS_NODE_PROJECT=src/tsconfig.json mocha -r ts-node/register src/**/*.spec.ts"
+    "test": "TS_NODE_PROJECT=src/tsconfig.json mocha -r ts-node/register -r dotenv/config src/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
