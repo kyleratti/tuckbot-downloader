@@ -22,7 +22,7 @@
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "aws-sdk": "^2.643.0",
+    "aws-sdk": "^2.645.0",
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
@@ -36,7 +36,7 @@
     "snoostorm": "^0.0.5",
     "snoowrap": "^1.21.0",
     "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "youtube-dl": "^2.1.0"
+    "youtube-dl": "^3.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
@@ -51,7 +51,7 @@
     "@types/youtube-dl": "^1.12.2",
     "chai": "^4.2.0",
     "mocha": "^7.1.1",
-    "ts-node": "^8.7.0",
+    "ts-node": "^8.8.1",
     "typescript": "^3.8.3"
   }
 }
