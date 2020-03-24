@@ -36,7 +36,7 @@
     "snoostorm": "^0.0.5",
     "snoowrap": "^1.21.0",
     "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
-    "youtube-dl": "^3.0.0"
+    "youtube-dl": "^3.0.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
