@@ -1,41 +1,36 @@
-import { expect } from "chai";
-import * as dotenv from "dotenv";
 import fs from "fs";
-import "mocha";
 import { configurator } from "tuckbot-util";
 import { DownloadedVideo } from "../../downloaders/downloadedvideo";
 import { VideoDownloader } from "../../downloaders/videodownloader";
-import { SubredditScanner } from "../../scanners";
 
-dotenv.config({
-  debug: true,
-});
+describe("ffmpeg", () => {
+  test("binary path defined", () => {
+    return expect(configurator.ffmpeg.location).not.toBeNull();
+  });
 
-describe("ffmpeg installed?", () => {
-  it("should be a valid path", () => {
-    const result = configurator.ffmpeg.location;
-
-    console.log(`ffmpeg_bin.path: ${result}`);
-
-    return expect(fs.existsSync(result)).to.equal(true);
+  test("binary exists", () => {
+    return expect(fs.existsSync(configurator.ffmpeg.location)).toBeTruthy();
   });
 });
 
-describe("v.redd.it video download", () => {
-  it("should have a non-null processing dir", () => {
-    const result = configurator.file.processingDir;
-
-    console.log(`processingDir: ${result}`);
-    return expect(result).to.not.null;
+describe("video download", () => {
+  test("processingDir defined", () => {
+    return expect(configurator.file.processingDir).not.toBeNull();
   });
 
-  it("should download a .mp4 file", async () => {
-    const result = await VideoDownloader.fetch({
-      redditPostId: "ezrsxb",
-      videoUrl:
-        "https://www.reddit.com/r/PublicFreakout/comments/ezrsxb/dont_be_so_afraid_its_ok/",
-    });
+  test("processingDir exists", () => {
+    return expect(fs.existsSync(configurator.file.processingDir)).toBeTruthy();
+  });
 
-    return expect(result).to.instanceOf(DownloadedVideo);
-  }).timeout(0);
+  test.each(["ezrsxb", "g3p2fg"])(
+    "downloads the video on reddit post %s",
+    async (redditPostId) => {
+      return expect(
+        await VideoDownloader.fetch({
+          redditPostId: redditPostId,
+          videoUrl: "https://www.reddit.com/" + redditPostId,
+        })
+      ).toBeInstanceOf(DownloadedVideo);
+    }
+  );
 });
