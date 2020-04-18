@@ -8,6 +8,7 @@ RUN mkdir -p /app-src
 WORKDIR /app-src
 COPY src/ /app-src/src/
 COPY package.json /app-src/
+COPY jest.config.js /app-src/
 RUN npm install --no-package-lock
 RUN npm run build
 RUN npm run test
