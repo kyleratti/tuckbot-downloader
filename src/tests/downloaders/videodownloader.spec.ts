@@ -19,6 +19,7 @@ describe("video download", () => {
   });
 
   test("processingDir exists", () => {
+    console.log(configurator.file.processingDir);
     return expect(fs.existsSync(configurator.file.processingDir)).toBeTruthy();
   });
 
