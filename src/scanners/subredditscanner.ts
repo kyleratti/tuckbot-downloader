@@ -1,4 +1,4 @@
-import snoostorm from "snoostorm";
+import { SubmissionStream } from "snoostorm";
 import { Submission } from "snoowrap";
 import { configurator, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
@@ -19,7 +19,7 @@ export class SubredditScanner extends Scanner {
   public static async processVideo(scannedPost: ScannedPost) {
     let video = await VideoDownloader.fetch({
       videoUrl: scannedPost.url,
-      redditPostId: scannedPost.redditPostId
+      redditPostId: scannedPost.redditPostId,
     });
     console.log(`successfully fetched ${video.redditPostId}`);
 
@@ -32,14 +32,14 @@ export class SubredditScanner extends Scanner {
     await TuckbotApi.update({
       redditPostId: video.redditPostId,
       redditPostTitle: scannedPost.title,
-      mirrorUrl: videoUrl
+      mirrorUrl: videoUrl,
     });
 
     console.log(`successfully updated tuckbot api ${video.redditPostId}`);
 
     await ACMApi.update({
       redditPostId: video.redditPostId,
-      url: mirrorUrl
+      url: mirrorUrl,
     });
 
     console.log(`successfully updated acm api ${video.redditPostId}`);
@@ -51,15 +51,13 @@ export class SubredditScanner extends Scanner {
     if (configurator.reddit.scanSubsList.length <= 0)
       throw new Error("Subreddit scan list is empty; aborting");
 
-    let storm = new snoostorm(snooman.wrap);
-
-    configurator.reddit.scanSubsList.forEach(subName => {
+    configurator.reddit.scanSubsList.forEach((subName) => {
       console.debug(`Creating submission stream watch for /r/${subName}`);
-      let stream = storm.SubmissionStream({
+      const stream = new SubmissionStream(snooman.wrap, {
         subreddit: subName,
-        results: 5,
+        limit: 5,
         pollTime:
-          1000 * (2 * Math.ceil(configurator.reddit.scanSubsList.length))
+          1000 * (2 * Math.ceil(configurator.reddit.scanSubsList.length)),
       });
 
       stream.on("submission", async (post: Submission) => {
@@ -69,7 +67,7 @@ export class SubredditScanner extends Scanner {
           await SubredditScanner.processVideo({
             redditPostId: post.id,
             title: post.title,
-            url: post.url
+            url: post.url,
           });
         } catch (err) {
           console.error(`Unable to process video`);
