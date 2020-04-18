@@ -32,6 +32,6 @@ describe("video download", () => {
         })
       ).toBeInstanceOf(DownloadedVideo);
     },
-    0
+    1000 * 60
   );
 });
