@@ -1,5 +1,5 @@
 FROM jrottenberg/ffmpeg:4.2-alpine as ffmpeg-bin
-FROM node:10-alpine AS app-build
+FROM node:12-alpine AS app-build
 ARG FFMPEG_LOCATION
 RUN apk add python git
 COPY --from=ffmpeg-bin / /
@@ -11,7 +11,7 @@ RUN npm install --no-package-lock
 RUN npm run build
 RUN npm run test
 
-FROM node:10-alpine AS app-runtime
+FROM node:12-alpine AS app-runtime
 RUN apk add python
 RUN mkdir /app
 COPY --from=ffmpeg-bin / /
