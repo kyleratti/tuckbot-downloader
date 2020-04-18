@@ -57,7 +57,7 @@ export class SubredditScanner extends Scanner {
         subreddit: subName,
         limit: 5,
         pollTime:
-          1000 * (2 * Math.ceil(configurator.reddit.scanSubsList.length)),
+          5000 * (2 * Math.ceil(configurator.reddit.scanSubsList.length)),
       });
 
       stream.on("submission", async (post: Submission) => {
