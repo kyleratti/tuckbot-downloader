@@ -5,9 +5,10 @@ import "mocha";
 import { configurator } from "tuckbot-util";
 import { DownloadedVideo } from "../../downloaders/downloadedvideo";
 import { VideoDownloader } from "../../downloaders/videodownloader";
+import { SubredditScanner } from "../../scanners";
 
 dotenv.config({
-  debug: true
+  debug: true,
 });
 
 describe("ffmpeg installed?", () => {
@@ -32,7 +33,7 @@ describe("v.redd.it video download", () => {
     const result = await VideoDownloader.fetch({
       redditPostId: "ezrsxb",
       videoUrl:
-        "https://www.reddit.com/r/PublicFreakout/comments/ezrsxb/dont_be_so_afraid_its_ok/"
+        "https://www.reddit.com/r/PublicFreakout/comments/ezrsxb/dont_be_so_afraid_its_ok/",
     });
 
     return expect(result).to.instanceOf(DownloadedVideo);
