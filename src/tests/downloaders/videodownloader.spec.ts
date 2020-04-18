@@ -31,6 +31,7 @@ describe("video download", () => {
           videoUrl: "https://www.reddit.com/" + redditPostId,
         })
       ).toBeInstanceOf(DownloadedVideo);
-    }
+    },
+    0
   );
 });
