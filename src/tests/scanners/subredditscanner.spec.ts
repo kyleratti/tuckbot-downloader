@@ -1,4 +1,6 @@
 import { DownloadedVideo, VideoDownloader } from "../../downloaders";
+import { snooman } from "tuckbot-util";
+import { Submission } from "snoowrap";
 
 describe.skip("subredditscanner processVideo", () => {
   test(
@@ -17,5 +19,23 @@ describe.skip("subredditscanner processVideo", () => {
       ).toBeInstanceOf(DownloadedVideo);
     },
     1000 * 30
+  );
+});
+
+describe("Subreddit Scanner", () => {
+  test.each(["ezrsxb", "g3p2fg"])(
+    "retrieve post info for reddit post %s",
+    async (redditPostId) => {
+      const snoowrap = snooman.wrap;
+
+      // Workaround for typing error with await keyword
+      // see https://github.com/not-an-aardvark/snoowrap/issues/221
+      // @ts-ignore
+      const post: Submission = await snoowrap
+        .getSubmission(redditPostId)
+        .fetch();
+
+      return expect(post.id).toBe(redditPostId);
+    }
   );
 });
