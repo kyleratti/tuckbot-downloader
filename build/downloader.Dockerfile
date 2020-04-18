@@ -1,6 +1,7 @@
 FROM jrottenberg/ffmpeg:4.2-alpine as ffmpeg-bin
 FROM node:12-alpine AS app-build
 ARG FFMPEG_LOCATION
+ARG PROCESSING_DIR
 RUN apk add python git
 COPY --from=ffmpeg-bin / /
 RUN mkdir -p /app-src
