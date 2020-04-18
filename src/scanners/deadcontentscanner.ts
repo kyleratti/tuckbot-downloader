@@ -21,7 +21,7 @@ export class DeadContentScanner extends Scanner {
 
       console.debug(`Cut-off for stale content is ${removalDate.toString()}`);
 
-      videosToPrune.forEach(async vid => {
+      videosToPrune.forEach(async (vid) => {
         shouldRemove = false;
 
         // @ts-ignore
