@@ -26,6 +26,7 @@ export class DeadContentScanner extends Scanner {
 
         // @ts-ignore
         // FIXME: due to an issue with snoowrap typings, the 'await' keyword causes compile errors. see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33139
+        // TODO: handle rejection
         let submission: Submission = await snooman.wrap
           .getSubmission(vid.redditPostId)
           .fetch();
