@@ -60,7 +60,7 @@ export class SubredditScanner extends Scanner {
           5000 * (2 * Math.ceil(configurator.reddit.scanSubsList.length)),
       });
 
-      stream.on("submission", async (post: Submission) => {
+      stream.on("item", async (post: Submission) => {
         if (post.is_self) return; // TODO: add logic to detect if a valid video link
 
         try {
