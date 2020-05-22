@@ -1,6 +1,6 @@
-import { DownloadedVideo, VideoDownloader } from "../../downloaders";
-import { snooman } from "tuckbot-util";
 import { Submission } from "snoowrap";
+import { snooman } from "tuckbot-util";
+import { DownloadedVideo, VideoDownloader } from "../../downloaders";
 
 describe.skip("subredditscanner processVideo", () => {
   test(

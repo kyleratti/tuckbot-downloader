@@ -9,10 +9,10 @@ export class ACMApi {
       method: "POST",
       headers: {
         "X-ACM-API-Token": configurator.acm.apiToken,
-        "X-ACM-Bot-Token": configurator.acm.botToken
+        "X-ACM-Bot-Token": configurator.acm.botToken,
       },
       body: { data: data },
-      json: true
+      json: true,
     });
   }
 }

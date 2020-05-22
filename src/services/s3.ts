@@ -7,7 +7,7 @@ const endpoint = new aws.Endpoint(configurator.storage.s3.endpoint);
 const s3 = new aws.S3({
   endpoint: endpoint.href,
   accessKeyId: configurator.storage.s3.accessKeyId,
-  secretAccessKey: configurator.storage.s3.secretAccessKey
+  secretAccessKey: configurator.storage.s3.secretAccessKey,
 });
 
 export class S3 {
@@ -15,7 +15,7 @@ export class S3 {
     return s3
       .deleteObject({
         Bucket: configurator.storage.s3.bucket,
-        Key: `${video.redditPostId}.mp4` // TODO: actually get the file name instead of assuming .mp4
+        Key: `${video.redditPostId}.mp4`, // TODO: actually get the file name instead of assuming .mp4
       })
       .promise();
   }
@@ -26,7 +26,7 @@ export class S3 {
         Bucket: configurator.storage.s3.bucket,
         Key: `${video.redditPostId}.mp4`, // TODO: actually get the file name instead of assuming .mp4
         Body: fs.readFileSync(video.location),
-        ACL: "public-read"
+        ACL: "public-read",
       })
       .promise();
   }

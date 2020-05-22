@@ -1,6 +1,5 @@
-import { TuckbotApi } from "../../services";
-import { Submission } from "snoowrap";
 import { snooman } from "tuckbot-util";
+import { TuckbotApi } from "../../services";
 
 describe("Dead Content Scanner", () => {
   test("retrieve dead content from tuckbot api", async () => {

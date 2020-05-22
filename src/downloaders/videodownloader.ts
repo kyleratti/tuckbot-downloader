@@ -10,7 +10,7 @@ import { DownloadedVideo } from "./";
 export class VideoDownloader {
   private static getFiles(redditPostId: string) {
     return glob.sync(`${redditPostId}.*`, {
-      cwd: configurator.file.processingDir
+      cwd: configurator.file.processingDir,
     });
   }
 
@@ -72,10 +72,10 @@ export class VideoDownloader {
           `-o`,
           `${data.redditPostId}.%(ext)s`,
           `--merge-output-format`,
-          `mp4`
+          `mp4`,
         ],
         {
-          cwd: configurator.file.processingDir
+          cwd: configurator.file.processingDir,
         },
         (err, _output) => {
           if (err) return fail(err);
@@ -85,7 +85,7 @@ export class VideoDownloader {
           return success(
             new DownloadedVideo({
               location: location,
-              redditPostId: data.redditPostId
+              redditPostId: data.redditPostId,
             })
           );
         }
@@ -120,7 +120,7 @@ export class VideoDownloader {
       command.videoCodec("libx264");
       command.format(outputFormat);
       command.save(newLocation);
-      command.on("error", err => {
+      command.on("error", (err) => {
         fail(err);
       });
       command.on("end", () => {
@@ -130,7 +130,7 @@ export class VideoDownloader {
         success(
           new DownloadedVideo({
             location: newLocation,
-            redditPostId: vid.redditPostId
+            redditPostId: vid.redditPostId,
           })
         );
       });

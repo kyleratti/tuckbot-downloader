@@ -6,7 +6,7 @@ import {
   PruneVideoResponse,
   RemoveVideoResponse,
   StaleVideo,
-  VideoUpdateRequestOptions
+  VideoUpdateRequestOptions,
 } from "tuckbot-util";
 
 export class TuckbotApi {
@@ -15,10 +15,10 @@ export class TuckbotApi {
       uri: `${configurator.tuckbot.api.url}/private/video`,
       method: "POST",
       headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token
+        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
       },
       body: data,
-      json: true
+      json: true,
     });
   }
 
@@ -29,9 +29,9 @@ export class TuckbotApi {
       uri: `${configurator.tuckbot.api.url}/private/video/prune/${vid.redditPostId}`,
       method: "POST",
       headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token
+        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
       },
-      json: true
+      json: true,
     });
   }
 
@@ -42,9 +42,9 @@ export class TuckbotApi {
       uri: `${configurator.tuckbot.api.url}/private/video/${vid.redditPostId}`,
       method: "DELETE",
       headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token
+        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
       },
-      json: true
+      json: true,
     });
   }
 
@@ -53,9 +53,9 @@ export class TuckbotApi {
       uri: `${configurator.tuckbot.api.url}/private/video/stalevideos`,
       method: "GET",
       headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token
+        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
       },
-      json: true
+      json: true,
     });
   }
 }
