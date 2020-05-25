@@ -9,18 +9,19 @@ describe("Dead Content Scanner", () => {
   });
 
   test("retrieve reddit post info for dead content", async () => {
-    let videos = (await TuckbotApi.fetchStale()).data.staleVideos;
+    const videos = (await TuckbotApi.fetchStale()).data.staleVideos;
     let allVidsLoaded = true;
 
-    videos.forEach(async (vid) => {
+    for (let i = 0; i < videos.length; i++) {
+      const vid = videos[i];
       try {
         // @ts-ignore
         await snooman.wrap.getSubmission(vid.redditPostId).fetch();
       } catch (err) {
-        console.error("ERRR");
+        console.error(err);
         allVidsLoaded = false;
       }
-    });
+    }
 
     return expect(allVidsLoaded).toBeTruthy();
   });

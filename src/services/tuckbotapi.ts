@@ -1,4 +1,4 @@
-import request from "request-promise";
+import axios from "axios";
 import {
   configurator,
   FetchStaleVideosResponse,
@@ -11,51 +11,52 @@ import {
 
 export class TuckbotApi {
   static async update(data: VideoUpdateRequestOptions) {
-    return request({
-      uri: `${configurator.tuckbot.api.url}/private/video`,
-      method: "POST",
+    return axios.post(`${configurator.tuckbot.api.url}/private/video`, data, {
       headers: {
         "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
       },
-      body: data,
-      json: true,
+      responseType: "json",
     });
   }
 
   static async prune(
     vid: MirroredVideo | StaleVideo
   ): Promise<PruneVideoResponse> {
-    return request({
-      uri: `${configurator.tuckbot.api.url}/private/video/prune/${vid.redditPostId}`,
-      method: "POST",
-      headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
-      },
-      json: true,
-    });
+    return axios.post(
+      `${configurator.tuckbot.api.url}/private/video/prune/${vid.redditPostId}`,
+      {},
+      {
+        headers: {
+          "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
+        },
+        responseType: "json",
+      }
+    );
   }
 
   static async remove(
     vid: MirroredVideo | StaleVideo
   ): Promise<RemoveVideoResponse> {
-    return request({
-      uri: `${configurator.tuckbot.api.url}/private/video/${vid.redditPostId}`,
-      method: "DELETE",
-      headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
-      },
-      json: true,
-    });
+    return axios.delete(
+      `${configurator.tuckbot.api.url}/private/video/${vid.redditPostId}`,
+      {
+        headers: {
+          "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
+        },
+        responseType: "json",
+      }
+    );
   }
 
   static async fetchStale(): Promise<FetchStaleVideosResponse> {
-    return request({
-      uri: `${configurator.tuckbot.api.url}/private/video/stalevideos`,
-      method: "GET",
-      headers: {
-        "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
-      },
-      json: true,
-    });
+    return axios.get(
+      `${configurator.tuckbot.api.url}/private/video/stalevideos`,
+      {
+        headers: {
+          "X-Tuckbot-API-Token": configurator.tuckbot.api.token,
+        },
+        responseType: "json",
+      }
+    );
   }
 }

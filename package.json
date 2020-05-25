@@ -24,6 +24,7 @@
   "dependencies": {
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.658.0",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
@@ -41,9 +42,6 @@
     "@types/glob": "^7.1.1",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.0",
-    "@types/request": "^2.48.4",
-    "@types/request-promise": "^4.1.46",
-    "@types/request-promise-native": "^1.0.17",
     "@types/youtube-dl": "^1.12.2",
     "jest": "^25.3.0",
     "rimraf": "^3.0.2",

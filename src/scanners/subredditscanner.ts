@@ -17,7 +17,7 @@ export class SubredditScanner extends Scanner {
   }
 
   public static async processVideo(scannedPost: ScannedPost) {
-    let video = await VideoDownloader.fetch({
+    const video = await VideoDownloader.fetch({
       videoUrl: scannedPost.url,
       redditPostId: scannedPost.redditPostId,
     });
