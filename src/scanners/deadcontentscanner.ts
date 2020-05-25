@@ -24,25 +24,34 @@ export class DeadContentScanner extends Scanner {
       videosToPrune.forEach(async (vid) => {
         shouldRemove = false;
 
-        // @ts-ignore
-        // FIXME: due to an issue with snoowrap typings, the 'await' keyword causes compile errors. see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33139
-        // TODO: handle rejection
-        let submission: Submission = await snooman.wrap
-          .getSubmission(vid.redditPostId)
-          .fetch();
+        try {
+          // @ts-ignore
+          // FIXME: due to an issue with snoowrap typings, the 'await' keyword causes compile errors. see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33139
+          // TODO: handle rejection
+          let submission: Submission = await snooman.wrap
+            .getSubmission(vid.redditPostId)
+            .fetch();
 
-        let lastViewed = moment(vid.lastViewedAt);
+          let lastViewed = moment(vid.lastViewedAt);
 
-        if (!submission) shouldRemove = true;
-        else {
-          if (submission.removal_reason != null) {
-            // This is the only way I have found to detect whether or not a submission was removed
-            console.log(`'${submission.id}' now removed from reddit`);
-            shouldRemove = true;
-          } else if (lastViewed.isBefore(removalDate)) {
-            console.log(`${submission.id} last viewed > 20 days ago; removing`);
-            shouldRemove = true;
+          if (!submission) shouldRemove = true;
+          else {
+            if (submission.removal_reason != null) {
+              // This is the only way I have found to detect whether or not a submission was removed
+              console.log(`'${submission.id}' now removed from reddit`);
+              shouldRemove = true;
+            } else if (lastViewed.isBefore(removalDate)) {
+              console.log(
+                `${submission.id} last viewed > 20 days ago; removing`
+              );
+              shouldRemove = true;
+            }
           }
+        } catch (err) {
+          console.error(
+            `Failed to process stale content (${vid.redditPostId}): ${err}`
+          );
+          shouldRemove = true;
         }
 
         if (shouldRemove) {
@@ -51,7 +60,7 @@ export class DeadContentScanner extends Scanner {
             console.log(`sent tuckbot api req to remove ${vid.redditPostId}`);
             await S3.remove(vid);
             console.log(`removed s3 object for ${vid.redditPostId}`);
-          } catch (e) {
+          } catch (err) {
             console.error(`error removing ${vid.redditPostId}: ${e}`);
           }
         } else {
