@@ -73,6 +73,8 @@ export class VideoDownloader {
           `${data.redditPostId}.%(ext)s`,
           `--merge-output-format`,
           `mp4`,
+          `--match-filter`,
+          `"!is_live"`,
         ],
         {
           cwd: configurator.file.processingDir,
