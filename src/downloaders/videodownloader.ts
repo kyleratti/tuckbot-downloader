@@ -74,7 +74,7 @@ export class VideoDownloader {
           `--merge-output-format`,
           `mp4`,
           `--match-filter`,
-          `"!is_live"`,
+          `\!is_live`,
         ],
         {
           cwd: configurator.file.processingDir,
