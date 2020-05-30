@@ -17,32 +17,54 @@ export class SubredditScanner extends Scanner {
   }
 
   public static async processVideo(scannedPost: ScannedPost) {
-    const video = await VideoDownloader.fetch({
-      videoUrl: scannedPost.url,
-      redditPostId: scannedPost.redditPostId,
-    });
-    console.log(`successfully fetched ${video.redditPostId}`);
+    // FIXME: this is a horrible, horrible way to do this
+    // refactor to not catch and re-throw errors
+    let video;
 
-    await S3.upload(video);
-    console.log(`successfully uploaded ${video.redditPostId}`);
+    try {
+      video = await VideoDownloader.fetch({
+        videoUrl: scannedPost.url,
+        redditPostId: scannedPost.redditPostId,
+      });
+
+      console.log(`successfully fetched ${video.redditPostId}`);
+    } catch (err) {
+      throw err;
+    }
+
+    try {
+      await S3.upload(video);
+
+      console.log(`successfully uploaded ${video.redditPostId}`);
+    } catch (err) {
+      throw err;
+    }
 
     const mirrorUrl = `${configurator.tuckbot.frontend.url}/${video.redditPostId}`;
     const videoUrl = `${configurator.tuckbot.frontend.cdnUrl}/${video.redditPostId}.mp4`;
 
-    await TuckbotApi.update({
-      redditPostId: video.redditPostId,
-      redditPostTitle: scannedPost.title,
-      mirrorUrl: videoUrl,
-    });
+    try {
+      await TuckbotApi.update({
+        redditPostId: video.redditPostId,
+        redditPostTitle: scannedPost.title,
+        mirrorUrl: videoUrl,
+      });
 
-    console.log(`successfully updated tuckbot api ${video.redditPostId}`);
+      console.log(`successfully updated tuckbot api ${video.redditPostId}`);
+    } catch (err) {
+      throw err; // FIXME: this could be cleaner
+    }
 
-    await ACMApi.update({
-      redditPostId: video.redditPostId,
-      url: mirrorUrl,
-    });
+    try {
+      await ACMApi.update({
+        redditPostId: video.redditPostId,
+        url: mirrorUrl,
+      });
 
-    console.log(`successfully updated acm api ${video.redditPostId}`);
+      console.log(`successfully updated acm api ${video.redditPostId}`);
+    } catch (err) {
+      throw err;
+    }
 
     VideoDownloader.cleanup(video.redditPostId);
   }
