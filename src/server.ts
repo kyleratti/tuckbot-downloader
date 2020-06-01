@@ -10,6 +10,6 @@ export class Server {
     let deadcontentScanner = new DeadContentScanner({
       scanInterval: 1000 * 30,
     });
-    deadcontentScanner.start();
+    // deadcontentScanner.start();
   }
 }
