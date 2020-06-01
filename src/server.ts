@@ -8,7 +8,7 @@ export class Server {
     subredditScanner.start();
 
     let deadcontentScanner = new DeadContentScanner({
-      scanInterval: 1000 * 45,
+      scanInterval: 1000 * 30,
     });
     deadcontentScanner.start();
   }
