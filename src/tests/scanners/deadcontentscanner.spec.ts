@@ -9,23 +9,27 @@ describe("Dead Content Scanner", () => {
     }).not.toThrow();
   });
 
-  test("retrieve reddit post info for dead content", async () => {
-    const videos = (await TuckbotApi.fetchStale()).data.staleVideos;
-    let allVidsLoaded = true;
+  test(
+    "retrieve reddit post info for dead content",
+    async () => {
+      const videos = (await TuckbotApi.fetchStale()).data.staleVideos;
+      let allVidsLoaded = true;
 
-    for (let i = 0; i < videos.length; i++) {
-      const vid = videos[i];
-      try {
-        // @ts-ignore
-        await snooman.wrap.getSubmission(vid.redditPostId).fetch();
-      } catch (err) {
-        console.error(err);
-        allVidsLoaded = false;
+      for (let i = 0; i < videos.length; i++) {
+        const vid = videos[i];
+        try {
+          // @ts-ignore
+          await snooman.wrap.getSubmission(vid.redditPostId).fetch();
+        } catch (err) {
+          console.error(err);
+          allVidsLoaded = false;
+        }
       }
-    }
 
-    return expect(allVidsLoaded).toBeTruthy();
-  });
+      return expect(allVidsLoaded).toBeTruthy();
+    },
+    1000 * 30
+  );
 
   test("identify submission removed by author", async () => {
     // @ts-ignore
