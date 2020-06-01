@@ -36,9 +36,7 @@ export class TuckbotApi {
     );
   }
 
-  static async remove(
-    vid: MirroredVideo | StaleVideo
-  ): Promise<RemoveVideoResponse> {
+  static async remove(vid: MirroredVideo | StaleVideo) {
     return (
       await axios.delete(
         `${configurator.tuckbot.api.url}/private/video/${vid.redditPostId}`,
@@ -49,10 +47,10 @@ export class TuckbotApi {
           responseType: "json",
         }
       )
-    ).data;
+    ).data as RemoveVideoResponse;
   }
 
-  static async fetchStale(): Promise<FetchStaleVideosResponse> {
+  static async fetchStale() {
     return (
       await axios.get(
         `${configurator.tuckbot.api.url}/private/video/stalevideos`,
@@ -63,6 +61,6 @@ export class TuckbotApi {
           responseType: "json",
         }
       )
-    ).data;
+    ).data as FetchStaleVideosResponse;
   }
 }

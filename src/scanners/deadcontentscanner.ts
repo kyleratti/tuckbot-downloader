@@ -21,7 +21,8 @@ export class DeadContentScanner extends Scanner {
 
       console.debug(`Cut-off for stale content is ${removalDate.toString()}`);
 
-      videosToPrune.forEach(async (vid) => {
+      for (let i = 0; i < videosToPrune.length; i++) {
+        const vid = videosToPrune[i];
         shouldRemove = false;
 
         try {
@@ -71,7 +72,7 @@ export class DeadContentScanner extends Scanner {
         } else {
           await TuckbotApi.prune(vid);
         }
-      });
+      }
     };
 
     setInterval(doCheck, this.scanInterval);
