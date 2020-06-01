@@ -28,15 +28,20 @@ export class DeadContentScanner extends Scanner {
           // @ts-ignore
           // FIXME: due to an issue with snoowrap typings, the 'await' keyword causes compile errors. see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33139
           // TODO: handle rejection
-          let submission: Submission = await snooman.wrap
+          const submission: Submission = await snooman.wrap
             .getSubmission(vid.redditPostId)
             .fetch();
 
-          let lastViewed = moment(vid.lastViewedAt);
+          const lastViewed = moment(vid.lastViewedAt);
 
           if (!submission) shouldRemove = true;
           else {
-            if (submission.removal_reason != null) {
+            if (
+              submission.removal_reason != null ||
+              // @ts-expect-error
+              // This will error in TS because of a missing properties on the typings file
+              submission.removed_by_category != null
+            ) {
               // This is the only way I have found to detect whether or not a submission was removed
               console.log(`'${submission.id}' now removed from reddit`);
               shouldRemove = true;
