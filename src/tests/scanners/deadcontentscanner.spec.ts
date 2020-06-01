@@ -1,3 +1,4 @@
+import { Submission } from "snoowrap";
 import { snooman } from "tuckbot-util";
 import { TuckbotApi } from "../../services";
 
@@ -24,5 +25,21 @@ describe("Dead Content Scanner", () => {
     }
 
     return expect(allVidsLoaded).toBeTruthy();
+  });
+
+  test("identify submission removed by author", async () => {
+    // @ts-ignore
+    const post: Submission = await snooman.wrap.getSubmission("guqq1j").fetch();
+
+    // @ts-expect-error
+    return expect(post.removed_by_category).toBe("author");
+  });
+
+  test("identify submission removed by moderator", async () => {
+    // @ts-ignore
+    const post: Submission = await snooman.wrap.getSubmission("guswxq").fetch();
+
+    // @ts-expect-error
+    return expect(post.removed_by_category).toBe("moderator");
   });
 });
