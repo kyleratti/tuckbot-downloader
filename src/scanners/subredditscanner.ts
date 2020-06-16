@@ -143,7 +143,7 @@ export class SubredditScanner extends Scanner {
         } catch (err) {
           logger.error({
             msg: `Unable to process scanned video`,
-            err: err,
+            error: err,
           });
         } finally {
           logger.debug({
