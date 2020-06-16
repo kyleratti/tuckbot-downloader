@@ -1,25 +1,36 @@
 import moment from "moment";
 import { Submission } from "snoowrap";
-import { snooman } from "tuckbot-util";
+import { logger, snooman } from "tuckbot-util";
 import { S3, TuckbotApi } from "../services";
 import { Scanner } from "./scanner";
 
 export class DeadContentScanner extends Scanner {
   async start() {
-    console.log(
-      `Starting dead content scanner at ${this.scanInterval}ms interval`
-    );
+    logger.info({
+      msg: `Starting dead content scanner`,
+      scanInterval: this.scanInterval,
+    });
 
     const doCheck = async () => {
-      console.log(`Checking for stale content`);
-      let videosToPrune = (await TuckbotApi.fetchStale()).data.staleVideos;
+      logger.info({
+        msg: `Checking for stale content`,
+      });
 
-      console.debug(`Found ${videosToPrune.length} video(s)`);
+      const videosToPrune = (await TuckbotApi.fetchStale()).data.staleVideos;
+
+      if (videosToPrune && videosToPrune.length <= 0)
+        return logger.debug({
+          msg: `No videos need pruning`,
+        });
 
       let shouldRemove = false;
       const removalDate = moment().subtract(45, "days");
 
-      console.debug(`Cut-off for stale content is ${removalDate.toString()}`);
+      logger.debug({
+        msg: `Found videos to prune`,
+        videos: videosToPrune,
+        removalDate: removalDate,
+      });
 
       for (let i = 0; i < videosToPrune.length; i++) {
         const vid = videosToPrune[i];
@@ -44,30 +55,55 @@ export class DeadContentScanner extends Scanner {
               submission.removed_by_category != null
             ) {
               // This is the only way I have found to detect whether or not a submission was removed
-              console.log(`'${submission.id}' now removed from reddit`);
+              logger.debug({
+                msg: `Flagging existing mirror of a post now removed from reddit for removal`,
+                redditPostId: submission.id,
+                removal_reason: submission.removal_reason,
+                // @ts-expect-error
+                removed_by_category: submission.removed_by_category,
+              });
               shouldRemove = true;
             } else if (lastViewed.isBefore(removalDate)) {
-              console.log(
-                `${submission.id} last viewed > 45 days ago; removing`
-              );
+              logger.debug({
+                msg: `Flagging existing mirror that hasn't been viewed within the threshold for removal`,
+                redditPostId: submission.id,
+                removalDate: removalDate,
+              });
+
               shouldRemove = true;
             }
           }
         } catch (err) {
-          console.error(
-            `Failed to process stale content (${vid.redditPostId}): ${err}`
-          );
+          logger.error({
+            msg: `Unable to process video needing pruning, flagging for removal`,
+            redditPostId: vid.redditPostId,
+            error: err,
+          });
+
           shouldRemove = true;
         }
 
         if (shouldRemove) {
           try {
             await TuckbotApi.remove(vid);
-            console.log(`sent tuckbot api req to remove ${vid.redditPostId}`);
+
+            logger.debug({
+              msg: `Removed dead content from tuckbot-api`,
+              redditPostId: vid.redditPostId,
+            });
+
             await S3.remove(vid);
-            console.log(`removed s3 object for ${vid.redditPostId}`);
+
+            logger.debug({
+              msg: `Removed dead content from S3 object storage`,
+              redditPostId: vid.redditPostId,
+            });
           } catch (err) {
-            console.error(`error removing ${vid.redditPostId}: ${err}`);
+            logger.error({
+              msg: `Unable to remove dead content`,
+              redditPostId: vid.redditPostId,
+              error: err,
+            });
           }
         } else {
           await TuckbotApi.prune(vid);

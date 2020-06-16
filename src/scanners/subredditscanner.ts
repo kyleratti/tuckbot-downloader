@@ -1,21 +1,13 @@
 import { SubmissionStream } from "snoostorm";
 import { Submission } from "snoowrap";
-import { configurator, snooman } from "tuckbot-util";
+import { configurator, logger, snooman } from "tuckbot-util";
 import { VideoDownloader } from "../downloaders";
 import { ACMApi, TuckbotApi } from "../services";
 import { S3 } from "../services/s3";
 import { ScannedPost } from "../structures";
-import { ConfigOptions, Scanner } from "./scanner";
+import { Scanner } from "./scanner";
 
 export class SubredditScanner extends Scanner {
-  constructor(options: ConfigOptions) {
-    super(options);
-
-    console.log(
-      `Starting subreddit scanner at ${options.scanInterval}ms interval`
-    );
-  }
-
   public static async processVideo(scannedPost: ScannedPost) {
     // FIXME: this is a horrible, horrible way to do this
     // refactor to not catch and re-throw errors
@@ -27,16 +19,39 @@ export class SubredditScanner extends Scanner {
         redditPostId: scannedPost.redditPostId,
       });
 
-      console.log(`successfully fetched ${video.redditPostId}`);
+      logger.debug({
+        msg: `Fetched linked video`,
+        redditPostId: video.redditPostId,
+      });
     } catch (err) {
+      logger.error({
+        msg: `Unable to fetch linked video`,
+        redditPostId: scannedPost.redditPostId,
+        error: err,
+      });
+
       throw err;
     }
 
     try {
-      await S3.upload(video);
+      const result = await S3.upload(video);
 
-      console.log(`successfully uploaded ${video.redditPostId}`);
+      logger.debug({
+        msg: `Uploaded video to S3 object storage`,
+        redditPostId: video.redditPostId,
+        result: {
+          bucket: result.Bucket,
+          location: result.Location,
+          key: result.Key,
+        },
+      });
     } catch (err) {
+      logger.error({
+        msg: `Unable to upload video to S3 object storage`,
+        redditPostId: video.redditPostId,
+        error: err,
+      });
+
       throw err;
     }
 
@@ -44,25 +59,45 @@ export class SubredditScanner extends Scanner {
     const videoUrl = `${configurator.tuckbot.frontend.cdnUrl}/${video.redditPostId}.mp4`;
 
     try {
-      await TuckbotApi.update({
+      const result = await TuckbotApi.update({
         redditPostId: video.redditPostId,
         redditPostTitle: scannedPost.title,
         mirrorUrl: videoUrl,
       });
 
-      console.log(`successfully updated tuckbot api ${video.redditPostId}`);
+      logger.debug({
+        msg: `Updated tuckbot-api`,
+        redditPostId: video.redditPostId,
+        result: result,
+      });
     } catch (err) {
+      logger.error({
+        msg: `Unable to update tuckbot-api`,
+        redditPostId: video.redditPostId,
+        error: err,
+      });
+
       throw err; // FIXME: this could be cleaner
     }
 
     try {
-      await ACMApi.update({
+      const result = await ACMApi.update({
         redditPostId: video.redditPostId,
         url: mirrorUrl,
       });
 
-      console.log(`successfully updated acm api ${video.redditPostId}`);
+      logger.debug({
+        msg: `Updated a-centralized-mirror`,
+        redditPostId: video.redditPostId,
+        result: result,
+      });
     } catch (err) {
+      logger.error({
+        msg: `Unable to update a-centralized-mirror`,
+        redditPostId: video.redditPostId,
+        error: err,
+      });
+
       throw err;
     }
 
@@ -70,11 +105,25 @@ export class SubredditScanner extends Scanner {
   }
 
   start() {
-    if (configurator.reddit.scanSubsList.length <= 0)
-      throw new Error("Subreddit scan list is empty; aborting");
+    logger.info({
+      msg: `Starting subreddit scanner`,
+      scanInterval: this.scanInterval,
+    });
+
+    if (configurator.reddit.scanSubsList.length <= 0) {
+      logger.fatal({
+        msg: `Subreddit scan list is empty; aborting`,
+      });
+
+      throw `Subreddit scan list is empty; aborting`;
+    }
 
     configurator.reddit.scanSubsList.forEach((subName) => {
-      console.debug(`Creating submission stream watch for /r/${subName}`);
+      logger.info({
+        msg: `Creating submission stream listener`,
+        subredditName: subName.toLowerCase(),
+      });
+
       const stream = new SubmissionStream(snooman.wrap, {
         subreddit: subName,
         limit: 5,
@@ -92,10 +141,22 @@ export class SubredditScanner extends Scanner {
             url: post.url,
           });
         } catch (err) {
-          console.error(`Unable to process video`);
-          console.error(err);
+          logger.error({
+            msg: `Unable to process scanned video`,
+            err: err,
+          });
         } finally {
+          logger.debug({
+            msg: `Cleaning up video download`,
+            redditPostId: post.id,
+          });
+
           VideoDownloader.cleanup(post.id);
+
+          logger.debug({
+            msg: `Finished video download cleanup`,
+            redditPostId: post.id,
+          });
         }
       });
     });

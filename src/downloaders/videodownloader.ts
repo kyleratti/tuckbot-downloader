@@ -2,15 +2,21 @@ import Ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import glob from "glob";
 import { resolve } from "path";
-import { configurator } from "tuckbot-util";
+import { configurator, logger } from "tuckbot-util";
 import youtubedl from "youtube-dl";
 import { VideoDownloaderConfig } from "../structures";
 import { DownloadedVideo } from "./";
 
+const processingDir = configurator.file.processingDir;
+
 export class VideoDownloader {
+  /**
+   * Locates all files with any extension in `processingDir`
+   * @param redditPostId The reddit post ID
+   */
   private static getFiles(redditPostId: string) {
     return glob.sync(`${redditPostId}.*`, {
-      cwd: configurator.file.processingDir,
+      cwd: processingDir,
     });
   }
 
@@ -19,28 +25,60 @@ export class VideoDownloader {
    * @param redditPostId The reddit post ID to look for dangling files
    */
   static cleanup(redditPostId: string) {
-    let files = this.getFiles(redditPostId);
+    const files = this.getFiles(redditPostId);
+
+    if (files.length <= 0) {
+      return logger.debug({
+        msg: `No matching files found in processing directory`,
+        processingDir: processingDir,
+        redditPostId: redditPostId,
+      });
+    } else
+      logger.debug({
+        msg: `Located files in processing directory needing removal`,
+        processingDir: processingDir,
+        files: files,
+      });
 
     for (let i = 0; i < files.length; i++) {
-      const file = `${configurator.file.processingDir}/${files[i]}`;
-      fs.unlinkSync(file);
+      const fileName = files[i];
+      const filePath = `${processingDir}/${fileName}`;
+
+      logger.debug({
+        msg: `Removing file from processing directory`,
+        fileName: fileName,
+        filePath: filePath,
+      });
+
+      fs.unlinkSync(filePath);
     }
   }
 
   private static findVideoPath(redditPostId: string): string {
-    let files = this.getFiles(redditPostId);
+    const files = this.getFiles(redditPostId);
 
-    if (!files || files.length === 0)
-      throw new Error(
-        `Unable to locate "${redditPostId}.*" in "${configurator.file.processingDir}"`
-      );
+    if (!files || files.length === 0) {
+      logger.error({
+        msg: `Located no files for post (did youtube-dl fail?)`,
+        processingDir: processingDir,
+        redditPostId: redditPostId,
+      });
 
-    if (files.length !== 1)
-      throw new Error(
-        `Located ${files.length} files matching "${configurator.file.processingDir}/${redditPostId}.*"`
-      );
+      throw `Unable to locate any files for post`;
+    }
 
-    return resolve(`${configurator.file.processingDir}/${files[0]}`);
+    if (files.length !== 1) {
+      logger.error({
+        msg: `Located too many files for post (did youtube-dl not combine sources?)`,
+        procesingDir: processingDir,
+        redditPostId: redditPostId,
+        files: files,
+      });
+
+      throw `Located too many files for post`;
+    }
+
+    return resolve(`${processingDir}/${files[0]}`);
   }
 
   /**
@@ -48,8 +86,14 @@ export class VideoDownloader {
    * @param data The data structure to process
    */
   static async fetch(data: VideoDownloaderConfig) {
-    if (!fs.existsSync(configurator.file.processingDir))
-      fs.mkdirSync(configurator.file.processingDir);
+    if (!fs.existsSync(processingDir)) {
+      logger.info({
+        msg: `Processing directory does not exist; trying to create`,
+        processingDir: processingDir,
+      });
+
+      fs.mkdirSync(processingDir);
+    }
 
     return new Promise<DownloadedVideo>((success, fail) => {
       /*
@@ -77,12 +121,12 @@ export class VideoDownloader {
           `\!is_live`,
         ],
         {
-          cwd: configurator.file.processingDir,
+          cwd: processingDir,
         },
         (err, _output) => {
           if (err) return fail(err);
 
-          let location = VideoDownloader.findVideoPath(data.redditPostId);
+          const location = VideoDownloader.findVideoPath(data.redditPostId);
 
           return success(
             new DownloadedVideo({
@@ -95,6 +139,7 @@ export class VideoDownloader {
     });
   }
 
+  /** @deprecated */
   static async convert(vid: DownloadedVideo) {
     if (!fs.existsSync(configurator.ffmpeg.location))
       throw new Error("ffmpeg.path not found; conversion not possible");
@@ -103,7 +148,7 @@ export class VideoDownloader {
 
     const outputFormat = "mp4";
     const newLocation = resolve(
-      configurator.file.processingDir,
+      processingDir,
       `${vid.redditPostId}.${outputFormat}`
     );
 

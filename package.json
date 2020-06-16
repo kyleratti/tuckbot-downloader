@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
-    "@elastic/ecs-pino-format": "^0.1.0",
     "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.697.0",
     "axios": "^0.19.2",
@@ -35,9 +34,6 @@
     "moment": "^2.24.0",
     "os": "^0.1.1",
     "path": "^0.12.7",
-    "pino": "^6.3.2",
-    "pino-elasticsearch": "^5.1.0",
-    "pino-multi-stream": "^5.0.0",
     "snoostorm": "^1.4.2",
     "snoowrap": "^1.21.0",
     "tuckbot-util": "git+https://github.com/kyleratti/tuckbot-util.git",
