@@ -132,7 +132,24 @@ export class SubredditScanner extends Scanner {
       });
 
       stream.on("item", async (post: Submission) => {
-        if (post.is_self) return; // TODO: add logic to detect if a valid video link
+        if (post.is_self) {
+          return logger.debug({
+            msg: `Skipping processing of self-post`,
+            redditPostId: post.id,
+            subredditName: subName,
+          });
+        }
+
+        logger.info({
+          msg: `Processing new video submission`,
+          redditPostId: post.id,
+          subredditName: subName,
+          submission: {
+            id: post.id,
+            title: post.title,
+            url: post.url,
+          },
+        });
 
         try {
           await SubredditScanner.processVideo({
@@ -144,14 +161,12 @@ export class SubredditScanner extends Scanner {
           logger.info({
             msg: `Processed scanned video`,
             redditPostId: post.id,
-            submissionUrl: post.url,
             subredditName: subName,
           });
         } catch (err) {
           logger.error({
             msg: `Unable to process scanned video`,
             redditPostId: post.id,
-            submissionUrl: post.url,
             subredditName: subName,
             error: err,
           });
