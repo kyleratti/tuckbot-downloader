@@ -140,6 +140,13 @@ export class SubredditScanner extends Scanner {
             title: post.title,
             url: post.url,
           });
+
+          logger.info({
+            msg: `Processed video`,
+            redditPostId: post.id,
+            submissionUrl: post.url,
+            subredditName: subName,
+          });
         } catch (err) {
           logger.error({
             msg: `Unable to process scanned video`,
