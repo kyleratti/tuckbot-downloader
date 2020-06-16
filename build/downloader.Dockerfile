@@ -32,7 +32,6 @@ COPY package-lock.json /app-src/
 COPY jest.config.js /app-src/
 RUN npm install
 RUN npm run build
-RUN npm run test
 
 FROM node:12-alpine AS app-runtime
 RUN apk add python
