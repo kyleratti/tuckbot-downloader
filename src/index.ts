@@ -8,7 +8,7 @@ const result = dotenv.config();
 
 if (result.error)
   logger.fatal({
-    msg: `Unable to load environment variables`,
+    msg: `Unable to load environment variables from file`,
     obj: result.error,
   });
 else logger.info(`Loaded environment variables`);
