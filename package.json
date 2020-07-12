@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
-    "a-mirror-util": "git+https://github.com/kyleratti/tuckbot-util.git",
     "aws-sdk": "^2.697.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
