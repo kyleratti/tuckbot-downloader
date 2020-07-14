@@ -27,6 +27,7 @@ export class S3 {
         Key: `${video.redditPostId}.mp4`, // TODO: actually get the file name instead of assuming .mp4
         Body: fs.readFileSync(video.location),
         ACL: "public-read",
+        ContentType: "video/mp4", // FIXME: needs to be auto detected
       })
       .promise();
   }
