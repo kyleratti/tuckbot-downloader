@@ -8,6 +8,8 @@ const s3 = new aws.S3({
   endpoint: endpoint.href,
   accessKeyId: configurator.storage.s3.accessKeyId,
   secretAccessKey: configurator.storage.s3.secretAccessKey,
+  sslEnabled: false,
+  hostPrefixEnabled: false,
 });
 
 export class S3 {
