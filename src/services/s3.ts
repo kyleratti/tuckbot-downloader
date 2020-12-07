@@ -10,6 +10,8 @@ const s3 = new aws.S3({
   secretAccessKey: configurator.storage.s3.secretAccessKey,
   sslEnabled: false,
   hostPrefixEnabled: false,
+  s3BucketEndpoint: false,
+  s3ForcePathStyle: true,
 });
 
 export class S3 {
