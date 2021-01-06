@@ -24,7 +24,7 @@
   "homepage": "https://github.com/kyleratti/tuckbot-downloader.git#readme",
   "dependencies": {
     "aws-sdk": "^2.713.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
