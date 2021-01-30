@@ -24,7 +24,7 @@ export class DeadContentScanner extends Scanner {
         });
 
       let shouldRemove = false;
-      const removalDate = moment().subtract(45, "days");
+      const removalDate = moment().subtract(20, "days");
 
       logger.debug({
         msg: `Found videos to prune`,
