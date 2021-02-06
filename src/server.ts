@@ -5,7 +5,7 @@ export class Server {
     const subredditScanner = new SubredditScanner({
       scanInterval: 1000 * 20, // TODO: set these from an environment variable
     });
-    subredditScanner.start();
+    //subredditScanner.start();
 
     const deadcontentScanner = new DeadContentScanner({
       scanInterval: 1000 * 30, // TODO: set these from an environment variable

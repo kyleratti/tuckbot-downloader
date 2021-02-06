@@ -1,39 +1,13 @@
-# tuckbot-downloader
+# Goodbye
+
+The pup that is responsible for it all!
 
 ![Tucker](https://raw.githubusercontent.com/kyleratti/tuckbot-downloader/master/img/tucker.jpg)
 
-This reddit bot will attempt to mirror linked video posts from supported services and post a link to them. It's named after my dog, Tucker.
+# Service Deprecation
 
-This part of the project polls participating subreddits for valid videos, downloads them, ~~converts them (if necessary)~~, uploads them to secondary storage, and then sends the public link to my other project, [a-centralized-mirror](https://github.com/kyleratti/a-centralized-mirror), to be posted in the comments.
+Effective **February 5, 2021**, the Tuckbot downloader has been **deprecated**. For an undetermined amount of time, the API and CDN will remain available for currently mirrored content. After that, all data pertaining to the project, including databases, video files, etc., will be purged.
 
-There's a few other pieces to Tuckbot.
+Thank you for your interest in the project, whether you were a developer or a user. It was an interesting challenge and I am grateful for the people I've met and experience I've gained.
 
-- [tuckbot-util](https://github.com/kyleratti/tuckbot-util/) - A few utility things that are standardized across tuckbot
-- [tuckbot-api](https://github.com/kyleratti/tuckbot-api/) - The backend API that tracks mirrored videos and view count
-- [tuckbot-frontend](https://github.com/kyleratti/tuckbot-frontend/) - The public frontend
-
-## Retention Policy
-
-**Tuckbot** will store mirrored videos for however long I consider to be financially appropriate. This is not a professional service so I make no guarantees to availability/uptime/retention.
-
-## Data Processing and Data Collected
-
-I have no interest in personal data; **Tuckbot** collects only the data it needs to function, and all of it is obtained via reddit's public API.
-
-- Permalink to the OP
-- Date and time of submission
-- Last view date and time
-
-## Supported Source Sites
-
-Basically anything supported by [youtube-dl](https://youtube-dl.org/) can be downloaded and mirrored.
-
-## Active Subreddits
-
-The following subreddits are friends of **Tuckbot**:
-
-- [/r/PublicFreakout](https://reddit.com/r/PublicFreakout)
-
-# And a standing ovation to...
-
-I absolutely _cannot_ thank **[RoboPhred](https://github.com/robophred)** enough for this help with this project and every single project I've worked on for the past decade. You are, without a doubt, the smartest man I'll ever know and the only reason I can program in any language at all. Your patience with me over the years is nothing short of astounding. Here's to you man!
+Tucker and I are going to focus our time, energy, and money into other projects. And more duck toys!
